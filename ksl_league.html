@@ -407,6 +407,58 @@
   body.view-mode .edit-only { display: none !important; }
   body.view-mode td.result-cell { cursor: default; pointer-events: none; }
   body.view-mode td.mirror { cursor: default; pointer-events: none; }
+
+  /* GitHub Upload */
+  .github-section {
+    margin-bottom: 12px;
+  }
+  .btn-github {
+    display: block;
+    width: 100%;
+    padding: 14px 28px;
+    background: #1a1a2e;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    color: #58a6ff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background 0.15s;
+  }
+  .btn-github:hover { background: #21262d; }
+  .github-status {
+    font-size: 11px;
+    text-align: center;
+    margin-top: 6px;
+    min-height: 16px;
+  }
+  .token-area {
+    margin-top: 10px;
+    display: none;
+  }
+  .token-input {
+    width: 100%;
+    background: #0f1f0f;
+    border: 1px solid #2e6b2e;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    margin-bottom: 8px;
+  }
+  .btn-token-save {
+    width: 100%;
+    padding: 8px;
+    background: #1b3a1b;
+    border: 1px solid #2e6b2e;
+    border-radius: 6px;
+    color: #81c784;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -455,6 +507,21 @@
   <table class="standings" id="standingsTable"></table>
 </div>
 
+<!-- GitHub Auto Upload -->
+<div class="github-section edit-only">
+  <button class="btn-github" onclick="uploadToGitHub()">
+    ⬆️ GitHubに保存・公開
+  </button>
+  <div class="github-status" id="githubStatus"></div>
+  <div class="token-area" id="tokenArea">
+    <div style="font-size:11px;color:#81c784;margin-bottom:6px;">GitHub Personal Access Token</div>
+    <input class="token-input" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+    <button class="btn-token-save" onclick="saveToken()">Tokenを保存</button>
+  </div>
+  <div style="text-align:right;margin-top:4px;">
+    <span onclick="toggleTokenArea()" style="font-size:10px;color:#4a7a4a;cursor:pointer;">🔑 Token設定</span>
+  </div>
+</div>
 <!-- Save -->
 <div style="margin-bottom:12px;">
   <button class="edit-only" onclick="manualSave()" style="background:#1b3a1b;color:#81c784;border:1px solid #2e6b2e;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;width:100%;letter-spacing:1px;">
@@ -824,6 +891,99 @@ function manualSave() {
   saveSchedules();
   document.getElementById('saveDone').style.display = 'block'; document.getElementById('saveDone').textContent = '✅ 保存しました！';
   setTimeout(() => { document.getElementById('saveDone').style.display = 'none'; }, 2000);
+}
+
+
+// ===== GITHUB AUTO UPLOAD =====
+const GITHUB_USER = 'Taku-FunPlace';
+const GITHUB_REPO = 'FunPlace-Portal';
+const GITHUB_FILE = 'ksl_league.html';
+const GITHUB_BRANCH = 'main';
+
+function getToken() {
+  return localStorage.getItem('github_token') || '';
+}
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { alert('Tokenを入力してください'); return; }
+  localStorage.setItem('github_token', t);
+  document.getElementById('tokenArea').style.display = 'none';
+  document.getElementById('githubStatus').style.color = '#4caf50';
+  document.getElementById('githubStatus').textContent = '✅ Token保存しました';
+  setTimeout(() => { document.getElementById('githubStatus').textContent = ''; }, 2000);
+}
+function toggleTokenArea() {
+  const area = document.getElementById('tokenArea');
+  area.style.display = area.style.display === 'none' ? 'block' : 'none';
+  if (area.style.display === 'block') {
+    document.getElementById('tokenInput').value = getToken();
+  }
+}
+
+async function uploadToGitHub() {
+  const token = getToken();
+  if (!token) {
+    document.getElementById('tokenArea').style.display = 'block';
+    document.getElementById('githubStatus').style.color = '#ffa726';
+    document.getElementById('githubStatus').textContent = '⚠️ まずTokenを設定してください';
+    return;
+  }
+
+  const status = document.getElementById('githubStatus');
+  status.style.color = '#81c784';
+  status.textContent = '⏳ アップロード中...';
+
+  try {
+    // 現在のファイルのSHAを取得
+    const getRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+
+    let sha = '';
+    if (getRes.ok) {
+      const getData = await getRes.json();
+      sha = getData.sha;
+    }
+
+    // 現在のHTMLを取得してデータを埋め込む
+    const currentHTML = document.documentElement.outerHTML;
+    const content = btoa(unescape(encodeURIComponent(currentHTML)));
+
+    // ファイルをアップロード
+    const putRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'token ' + token,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: '試合結果を更新',
+          content: content,
+          sha: sha,
+          branch: GITHUB_BRANCH
+        })
+      }
+    );
+
+    if (putRes.ok) {
+      status.style.color = '#66bb6a';
+      status.textContent = '✅ GitHubに保存しました！';
+      // localStorageにも保存
+      save();
+      saveSchedules();
+    } else {
+      const err = await putRes.json();
+      status.style.color = '#ef5350';
+      status.textContent = '❌ エラー: ' + (err.message || '不明なエラー');
+    }
+  } catch(e) {
+    status.style.color = '#ef5350';
+    status.textContent = '❌ 通信エラーが発生しました';
+  }
 }
 
 // ===== SHARE =====
