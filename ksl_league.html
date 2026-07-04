@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>リーグ戦表 - KSL-3L 2026</title>
@@ -461,13 +459,13 @@
   }
 </style>
 </head>
-<body>
+<body class="">
 
 <!-- View Mode Banner -->
-<div id="viewModeBanner" style="display:none;background:#1b3a1b;border:1px solid #4caf50;border-radius:8px;padding:10px 16px;text-align:center;margin-bottom:20px;font-size:12px;color:#81c784;">
+<div id="viewModeBanner" style="display: none; background: rgb(27, 58, 27); border: 1px solid rgb(76, 175, 80); border-radius: 8px; padding: 10px 16px; text-align: center; margin-bottom: 20px; font-size: 12px; color: rgb(129, 199, 132);">
   👀 閲覧モード　<span onclick="switchToEditMode()" style="margin-left:12px;color:#2e6b2e;font-size:10px;cursor:pointer;text-decoration:underline;">編集モードへ</span>
 </div>
-<div id="editModeBanner" style="display:none;background:#0a1f0a;border:1px solid #2e6b2e;border-radius:8px;padding:10px 16px;text-align:center;margin-bottom:20px;font-size:12px;color:#4caf50;">
+<div id="editModeBanner" style="display: block; background: rgb(10, 31, 10); border: 1px solid rgb(46, 107, 46); border-radius: 8px; padding: 10px 16px; text-align: center; margin-bottom: 20px; font-size: 12px; color: rgb(76, 175, 80);">
   ✏️ 編集モード　<span onclick="switchToViewMode()" style="margin-left:12px;color:#1e4a1e;font-size:10px;cursor:pointer;text-decoration:underline;">閲覧モードへ</span>
 </div>
 <header>
@@ -479,17 +477,17 @@
 <!-- Stats -->
 <div style="text-align:center;font-size:10px;color:#4caf50;letter-spacing:2px;margin-bottom:8px">⭐ FUNPLACE横浜</div>
 <div class="stats-bar">
-  <div class="stat-item"><div class="stat-num" id="stat-played">0</div><div class="stat-lbl">試合</div></div>
+  <div class="stat-item"><div class="stat-num" id="stat-played">1</div><div class="stat-lbl">試合</div></div>
   <div class="stat-divider"></div>
   <div class="stat-item"><div class="stat-num" id="stat-w" style="color:#66bb6a">0</div><div class="stat-lbl">勝</div></div>
   <div class="stat-divider"></div>
   <div class="stat-item"><div class="stat-num" id="stat-d" style="color:#ffa726">0</div><div class="stat-lbl">分</div></div>
   <div class="stat-divider"></div>
-  <div class="stat-item"><div class="stat-num" id="stat-l" style="color:#ef5350">0</div><div class="stat-lbl">負</div></div>
+  <div class="stat-item"><div class="stat-num" id="stat-l" style="color:#ef5350">1</div><div class="stat-lbl">負</div></div>
   <div class="stat-divider"></div>
   <div class="stat-item"><div class="stat-num" id="stat-gf">0</div><div class="stat-lbl">得点</div></div>
   <div class="stat-divider"></div>
-  <div class="stat-item"><div class="stat-num" id="stat-ga">0</div><div class="stat-lbl">失点</div></div>
+  <div class="stat-item"><div class="stat-num" id="stat-ga">2</div><div class="stat-lbl">失点</div></div>
   <div class="stat-divider"></div>
   <div class="stat-item"><div class="stat-num" id="stat-pts" style="color:#fff">0</div><div class="stat-lbl">勝点</div></div>
 </div>
@@ -498,13 +496,13 @@
 <div class="section-title">▸ 対戦結果表</div>
 <div class="legend">セルをタップしてスコアを入力 ／ 色：<span style="color:#66bb6a">勝</span>　<span style="color:#ffa726">分</span>　<span style="color:#ef5350">負</span>（行チーム視点）</div>
 <div class="table-wrapper">
-  <table class="cross" id="crossTable"></table>
+  <table class="cross" id="crossTable"><thead><tr><th>チーム</th><th class="myteam-col"><span style="color:#ffeb3b">FUN</span></th><th class="">AFC</th><th class="">CCF</th><th class="">VAL</th><th class="">SUP</th><th class="">YNP</th><th class="">SAN</th><th class="">TSK</th></tr></thead><tbody><tr class="myteam"><td>⭐ FUNPLACE横浜</td><td class="diagonal">－</td><td class="mirror " onclick="openModal(1,0)" style="cursor:pointer" title="FUNPLACE横浜 vs AFC横浜"><span class="result-text lose" style="opacity:0.45;font-size:11px">0–2</span></td><td class="mirror " onclick="openModal(2,0)" style="cursor:pointer" title="FUNPLACE横浜 vs CCF"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(3,0)" style="cursor:pointer" title="FUNPLACE横浜 vs FC Valda"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(4,0)" style="cursor:pointer" title="FUNPLACE横浜 vs CF.Supernova"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(5,0)" style="cursor:pointer" title="FUNPLACE横浜 vs Yokohama Noble Pride"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(6,0)" style="cursor:pointer" title="FUNPLACE横浜 vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,0)" style="cursor:pointer" title="FUNPLACE横浜 vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>AFC横浜</td><td class="result-cell myteam-col" onclick="openModal(1,0)" title="AFC横浜 vs FUNPLACE横浜"><span class="result-text win">2–0</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(2,1)" style="cursor:pointer" title="AFC横浜 vs CCF"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(3,1)" style="cursor:pointer" title="AFC横浜 vs FC Valda"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(4,1)" style="cursor:pointer" title="AFC横浜 vs CF.Supernova"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(5,1)" style="cursor:pointer" title="AFC横浜 vs Yokohama Noble Pride"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(6,1)" style="cursor:pointer" title="AFC横浜 vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,1)" style="cursor:pointer" title="AFC横浜 vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>CCF</td><td class="result-cell myteam-col" onclick="openModal(2,0)" title="CCF vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(2,1)" title="CCF vs AFC横浜"><span class="result-text empty">－</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(3,2)" style="cursor:pointer" title="CCF vs FC Valda"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(4,2)" style="cursor:pointer" title="CCF vs CF.Supernova"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(5,2)" style="cursor:pointer" title="CCF vs Yokohama Noble Pride"><span class="result-text lose" style="opacity:0.45;font-size:11px">0–2</span></td><td class="mirror " onclick="openModal(6,2)" style="cursor:pointer" title="CCF vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,2)" style="cursor:pointer" title="CCF vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>FC Valda</td><td class="result-cell myteam-col" onclick="openModal(3,0)" title="FC Valda vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(3,1)" title="FC Valda vs AFC横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(3,2)" title="FC Valda vs CCF"><span class="result-text empty">－</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(4,3)" style="cursor:pointer" title="FC Valda vs CF.Supernova"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(5,3)" style="cursor:pointer" title="FC Valda vs Yokohama Noble Pride"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(6,3)" style="cursor:pointer" title="FC Valda vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,3)" style="cursor:pointer" title="FC Valda vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>CF.Supernova</td><td class="result-cell myteam-col" onclick="openModal(4,0)" title="CF.Supernova vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(4,1)" title="CF.Supernova vs AFC横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(4,2)" title="CF.Supernova vs CCF"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(4,3)" title="CF.Supernova vs FC Valda"><span class="result-text empty">－</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(5,4)" style="cursor:pointer" title="CF.Supernova vs Yokohama Noble Pride"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(6,4)" style="cursor:pointer" title="CF.Supernova vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,4)" style="cursor:pointer" title="CF.Supernova vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>Yokohama Noble Pride</td><td class="result-cell myteam-col" onclick="openModal(5,0)" title="Yokohama Noble Pride vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(5,1)" title="Yokohama Noble Pride vs AFC横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(5,2)" title="Yokohama Noble Pride vs CCF"><span class="result-text win">2–0</span></td><td class="result-cell " onclick="openModal(5,3)" title="Yokohama Noble Pride vs FC Valda"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(5,4)" title="Yokohama Noble Pride vs CF.Supernova"><span class="result-text empty">－</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(6,5)" style="cursor:pointer" title="Yokohama Noble Pride vs SANNO Second"><span class="result-text empty" style="font-size:9px">▪</span></td><td class="mirror " onclick="openModal(7,5)" style="cursor:pointer" title="Yokohama Noble Pride vs 東湘FC"><span class="result-text empty" style="font-size:9px">▪</span></td></tr><tr class=""><td>SANNO Second</td><td class="result-cell myteam-col" onclick="openModal(6,0)" title="SANNO Second vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(6,1)" title="SANNO Second vs AFC横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(6,2)" title="SANNO Second vs CCF"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(6,3)" title="SANNO Second vs FC Valda"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(6,4)" title="SANNO Second vs CF.Supernova"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(6,5)" title="SANNO Second vs Yokohama Noble Pride"><span class="result-text empty">－</span></td><td class="diagonal">－</td><td class="mirror " onclick="openModal(7,6)" style="cursor:pointer" title="SANNO Second vs 東湘FC"><span class="result-text lose" style="opacity:0.45;font-size:11px">0–2</span></td></tr><tr class=""><td>東湘FC</td><td class="result-cell myteam-col" onclick="openModal(7,0)" title="東湘FC vs FUNPLACE横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,1)" title="東湘FC vs AFC横浜"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,2)" title="東湘FC vs CCF"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,3)" title="東湘FC vs FC Valda"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,4)" title="東湘FC vs CF.Supernova"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,5)" title="東湘FC vs Yokohama Noble Pride"><span class="result-text empty">－</span></td><td class="result-cell " onclick="openModal(7,6)" title="東湘FC vs SANNO Second"><span class="result-text win">2–0</span></td><td class="diagonal">－</td></tr></tbody></table>
 </div>
 
 <!-- Standings -->
 <div class="section-title">▸ 順位表</div>
 <div class="table-wrapper">
-  <table class="standings" id="standingsTable"></table>
+  <table class="standings" id="standingsTable"><thead><tr><th>#</th><th>チーム</th><th>試</th><th>勝</th><th>分</th><th>負</th><th>得</th><th>失</th><th>得失</th><th>勝点</th></tr></thead><tbody><tr class=""><td><span class="rank-badge top1">1</span></td><td>AFC横浜</td><td>1</td><td style="color:#66bb6a;font-weight:600">1</td><td style="color:#ffa726">0</td><td style="color:#ef5350">0</td><td>2</td><td>0</td><td style="color:#66bb6a">+2</td><td class="pts">3</td></tr><tr class=""><td><span class="rank-badge top2">2</span></td><td>Yokohama Noble Pride</td><td>1</td><td style="color:#66bb6a;font-weight:600">1</td><td style="color:#ffa726">0</td><td style="color:#ef5350">0</td><td>2</td><td>0</td><td style="color:#66bb6a">+2</td><td class="pts">3</td></tr><tr class=""><td><span class="rank-badge top3">3</span></td><td>東湘FC</td><td>1</td><td style="color:#66bb6a;font-weight:600">1</td><td style="color:#ffa726">0</td><td style="color:#ef5350">0</td><td>2</td><td>0</td><td style="color:#66bb6a">+2</td><td class="pts">3</td></tr><tr class=""><td><span class="rank-badge ">4</span></td><td>CF.Supernova</td><td>0</td><td style="color:#66bb6a;font-weight:600">0</td><td style="color:#ffa726">0</td><td style="color:#ef5350">0</td><td>0</td><td>0</td><td style="color:#888">0</td><td class="pts">0</td></tr><tr class=""><td><span class="rank-badge ">5</span></td><td>FC Valda</td><td>0</td><td style="color:#66bb6a;font-weight:600">0</td><td style="color:#ffa726">0</td><td style="color:#ef5350">0</td><td>0</td><td>0</td><td style="color:#888">0</td><td class="pts">0</td></tr><tr class=""><td><span class="rank-badge ">6</span></td><td>CCF</td><td>1</td><td style="color:#66bb6a;font-weight:600">0</td><td style="color:#ffa726">0</td><td style="color:#ef5350">1</td><td>0</td><td>2</td><td style="color:#ef5350">-2</td><td class="pts">0</td></tr><tr class="myteam"><td><span class="rank-badge ">7</span></td><td><span class="team-star">⭐</span>FUNPLACE横浜</td><td>1</td><td style="color:#66bb6a;font-weight:600">0</td><td style="color:#ffa726">0</td><td style="color:#ef5350">1</td><td>0</td><td>2</td><td style="color:#ef5350">-2</td><td class="pts">0</td></tr><tr class=""><td><span class="rank-badge ">8</span></td><td>SANNO Second</td><td>1</td><td style="color:#66bb6a;font-weight:600">0</td><td style="color:#ffa726">0</td><td style="color:#ef5350">1</td><td>0</td><td>2</td><td style="color:#ef5350">-2</td><td class="pts">0</td></tr></tbody></table>
 </div>
 
 <!-- GitHub Auto Upload -->
@@ -512,8 +510,8 @@
   <button class="btn-github" onclick="uploadToGitHub()">
     ⬆️ GitHubに保存・公開
   </button>
-  <div class="github-status" id="githubStatus"></div>
-  <div class="token-area" id="tokenArea">
+  <div class="github-status" id="githubStatus" style="color: rgb(129, 199, 132);">⏳ アップロード中...</div>
+  <div class="token-area" id="tokenArea" style="display: block;">
     <div style="font-size:11px;color:#81c784;margin-bottom:6px;">GitHub Personal Access Token</div>
     <input class="token-input" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
     <button class="btn-token-save" onclick="saveToken()">Tokenを保存</button>
@@ -527,7 +525,7 @@
   <button class="edit-only" onclick="manualSave()" style="background:#1b3a1b;color:#81c784;border:1px solid #2e6b2e;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;width:100%;letter-spacing:1px;">
     💾 保存する
   </button>
-  <div id="saveDone" style="display:none;color:#4caf50;font-size:12px;text-align:center;margin-top:6px;">✅ 保存しました！</div>
+  <div id="saveDone" style="display: none; color: rgb(76, 175, 80); font-size: 12px; text-align: center; margin-top: 6px;">✅ 保存しました！</div>
 </div>
 <div id="shareBtn" class="edit-only">
 <!-- Share -->
@@ -546,7 +544,7 @@
 </div></div>
 <!-- Schedule -->
 <div class="section-title">▸ 試合予定</div>
-<div id="scheduleList"></div>
+<div id="scheduleList"><div class="schedule-item next" onclick="openScheduleModal(0)"><div class="schedule-date">7/5<span class="day-label">(日)</span></div><div class="schedule-opponent"><span style="color:#ffeb3b">FUNPLACE横浜</span> <span style="color:#4caf50;font-size:11px">vs</span> <span>SANNO Second</span></div><span class="schedule-next-badge">NEXT</span></div><div class="schedule-item" onclick="openScheduleModal(1)"><div class="schedule-date">7/11<span class="day-label">(土)</span></div><div class="schedule-opponent"><span>CF.Supernova</span> <span style="color:#4caf50;font-size:11px">vs</span> <span>AFC横浜</span></div><span style="width:36px"></span></div><div class="schedule-item" onclick="openScheduleModal(2)"><div class="schedule-date">7/12<span class="day-label">(日)</span></div><div class="schedule-opponent"><span>SANNO Second</span> <span style="color:#4caf50;font-size:11px">vs</span> <span>FC Valda</span></div><span style="width:36px"></span></div><div class="schedule-item" onclick="openScheduleModal(3)"><div class="schedule-date">7/19<span class="day-label">(日)</span></div><div class="schedule-opponent"><span>CCF</span> <span style="color:#4caf50;font-size:11px">vs</span> <span>東湘FC</span></div><span style="width:36px"></span></div><div class="schedule-item" onclick="openScheduleModal(4)"><div class="schedule-date">7/20<span class="day-label">(月)</span></div><div class="schedule-opponent"><span>CF.Supernova</span> <span style="color:#4caf50;font-size:11px">vs</span> <span>Yokohama Noble Pride</span></div><span style="width:36px"></span></div></div>
 <button class="btn-add-schedule edit-only" onclick="openScheduleModal(-1)">＋ 試合予定を追加</button>
 
 <!-- Schedule Modal -->
@@ -559,16 +557,16 @@
     </div>
     <div style="margin-bottom:10px;">
       <div style="font-size:11px;color:#81c784;margin-bottom:6px;">チームA</div>
-      <select id="schedTeamA" style="width:100%;background:#0f1f0f;border:1px solid #2e6b2e;border-radius:6px;color:#fff;font-size:14px;padding:8px 10px;outline:none;"></select>
+      <select id="schedTeamA" style="width:100%;background:#0f1f0f;border:1px solid #2e6b2e;border-radius:6px;color:#fff;font-size:14px;padding:8px 10px;outline:none;"><option value="0">FUNPLACE横浜</option><option value="1">AFC横浜</option><option value="2">CCF</option><option value="3">FC Valda</option><option value="4">CF.Supernova</option><option value="5">Yokohama Noble Pride</option><option value="6">SANNO Second</option><option value="7">東湘FC</option></select>
     </div>
     <div style="text-align:center;color:#4caf50;font-weight:700;font-size:14px;margin-bottom:10px;">vs</div>
     <div style="margin-bottom:20px;">
       <div style="font-size:11px;color:#81c784;margin-bottom:6px;">チームB</div>
-      <select id="schedTeamB" style="width:100%;background:#0f1f0f;border:1px solid #2e6b2e;border-radius:6px;color:#fff;font-size:14px;padding:8px 10px;outline:none;"></select>
+      <select id="schedTeamB" style="width:100%;background:#0f1f0f;border:1px solid #2e6b2e;border-radius:6px;color:#fff;font-size:14px;padding:8px 10px;outline:none;"><option value="0">FUNPLACE横浜</option><option value="1">AFC横浜</option><option value="2">CCF</option><option value="3">FC Valda</option><option value="4">CF.Supernova</option><option value="5">Yokohama Noble Pride</option><option value="6">SANNO Second</option><option value="7">東湘FC</option></select>
     </div>
     <div class="modal-btns">
       <button class="btn btn-save" onclick="saveSchedule()">保存</button>
-      <button class="btn btn-clear" id="schedDeleteBtn" onclick="deleteSchedule()">削除</button>
+      <button class="btn btn-clear" id="schedDeleteBtn" onclick="deleteSchedule()" style="display: none;">削除</button>
       <button class="btn btn-cancel" onclick="closeScheduleModal()">キャンセル</button>
     </div>
   </div>
@@ -578,13 +576,13 @@
 <div class="modal-overlay edit-only" id="modalOverlay">
   <div class="modal">
     <h2>試合結果入力</h2>
-    <div class="matchup" id="modalMatchup"></div>
+    <div class="matchup" id="modalMatchup"><span>東湘FC</span><br>vs<br><span>SANNO Second</span></div>
     <div class="score-row">
-      <span class="score-label" id="scoreLabel1"></span>
+      <span class="score-label" id="scoreLabel1">TSK</span>
       <input class="score-input" type="number" min="0" max="99" id="scoreA" placeholder="0">
       <span class="score-sep">－</span>
       <input class="score-input" type="number" min="0" max="99" id="scoreB" placeholder="0">
-      <span class="score-label right" id="scoreLabel2"></span>
+      <span class="score-label right" id="scoreLabel2">SAN</span>
     </div>
     <div class="modal-btns">
       <button class="btn btn-save" onclick="saveResult()">保存</button>
@@ -1062,5 +1060,6 @@ document.getElementById('viewModeBanner').style.display = 'block';
 render();
 renderSchedule();
 </script>
-</body>
-</html>
+
+
+</body></html>
