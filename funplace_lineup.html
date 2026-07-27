@@ -454,8 +454,8 @@ let state = {
 let selectedPlayerId = null;
 
 function loadState() {
-  const saved = localStorage.getItem('funplace_lineup');
-  if (saved) { try { state = JSON.parse(saved); } catch(e){} }
+  const saved = (window.__serverData && window.__serverData['funplace_lineup']) ? window.__serverData['funplace_lineup'] : localStorage.getItem('funplace_lineup');
+  if (saved) { try { state = JSON.parse(saved); if(window.__serverData && window.__serverData['funplace_lineup']) localStorage.setItem('funplace_lineup', saved); } catch(e){} }
   PLAYERS.forEach(p => { if (state.attendance[p.id] === undefined) state.attendance[p.id] = false; });
 }
 function saveState() { localStorage.setItem('funplace_lineup', JSON.stringify(state)); }
@@ -857,7 +857,7 @@ function saveMatch() {
 
 // ========== HISTORY ==========
 function getHistory() {
-  try { return JSON.parse(localStorage.getItem('funplace_history')) || []; } catch(e) { return []; }
+  try { const v = (window.__serverData && window.__serverData['funplace_history']) ? window.__serverData['funplace_history'] : localStorage.getItem('funplace_history'); if(window.__serverData && window.__serverData['funplace_history']) localStorage.setItem('funplace_history', v); return JSON.parse(v) || []; } catch(e) { return []; }
 }
 function renderHistory() {
   var list = document.getElementById('history-list');
@@ -1065,10 +1065,10 @@ async function uploadToGitHub() {
     }
     // localStorageのデータを収集（Tokenは除外）
     const dataKeys = ['funplace_lineup', 'funplace_history'];
-    let initScript = '<script id="__ls_init__">\n';
+    let initScript = '<script id="__ls_init__">window.__serverData={};\n';
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
-      if (v) initScript += 'localStorage.setItem(' + JSON.stringify(k) + ', ' + JSON.stringify(v) + ');\n';
+      if (v) initScript += 'window.__serverData[' + JSON.stringify(k) + ']=' + JSON.stringify(v) + ';\n';
     });
     initScript += '<\/script>';
     // 既存の初期化スクリプトを置き換えるか、なければ</head>直前に挿入
