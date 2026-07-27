@@ -902,6 +902,16 @@ async function uploadToGitHub() {
       const gd = await getRes.json();
       sha = gd.sha;
       baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
+      // Tokenをすべて除去（セキュリティ対策）
+      const tokenVal = getToken();
+      if (tokenVal) {
+        const escaped = tokenVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        baseHTML = baseHTML.replace(new RegExp(escaped, 'g'), '');
+      }
+      // tokenInputの値をクリア
+      baseHTML = baseHTML.replace(/(<input[^>]+id="tokenInput"[^>]*value=")[^"]*"/g, '$1"');
+      // github_tokenのlocalStorage初期化を除去
+      baseHTML = baseHTML.replace(/localStorage\.setItem\(["']github_token["'][^)]+\);\n?/g, '');
     }
     // localStorageのデータを収集（Tokenは除外）
     const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
