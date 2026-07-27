@@ -252,9 +252,9 @@ function switchMode(m){
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // ===== NOTICES =====
-var notices=[];
+var notices=[{"date":"2026/07/28","title":"次回練習予定の案内","body":"次回は8/2(日)を予定しています。\n各自スケジュール調整をお願いします。"},{"date":"2026/07/28","title":"8月活動アンケート入力のお願い","body":"teamhubへ8月活動アンケートをアップしました。\n各自入力をお願いします。"},{"date":"2026/07/05","title":"チーム内共有ポータルを開設しました。","body":"チーム内共有ポータルを開設しました。\nリーグ戦情報などはこちらにアップします。\n出欠関係は変わらずteamhubを予定しています。"}];
 var editNoticeIdx=-1;
-function loadNotices(){if(window.__serverData&&window.__serverData['fp_notices']){notices=JSON.parse(window.__serverData['fp_notices']);localStorage.setItem('fp_notices',window.__serverData['fp_notices']);}else{var s=localStorage.getItem('fp_notices');if(s){notices=JSON.parse(s);}else if(notices.length===0){notices=[{date:'2026/07/05',title:'ホームページを開設しました',body:'チーム内共有ポータルを開設しました。'}];}}}
+function loadNotices(){}else{var s=localStorage.getItem('fp_notices');if(s){notices=JSON.parse(s);}else if(notices.length===0){notices=[{date:'2026/07/05',title:'ホームページを開設しました',body:'チーム内共有ポータルを開設しました。'}];}}}
 function saveNoticesLocal(){localStorage.setItem('fp_notices',JSON.stringify(notices));}
 function renderNotices(){
   var area=document.getElementById('noticesArea');
@@ -290,7 +290,7 @@ function delNotice(idx){if(!confirm('削除しますか？'))return;notices.spli
 
 // ===== SCHEDULE =====
 var schedules=[];
-function loadSchedule(){if(window.__serverData&&window.__serverData['fp_schedule']){schedules=JSON.parse(window.__serverData['fp_schedule']);localStorage.setItem('fp_schedule',window.__serverData['fp_schedule']);}else{var s=localStorage.getItem('fp_schedule');if(s)schedules=JSON.parse(s);}}
+function loadSchedule(){}else{var s=localStorage.getItem('fp_schedule');if(s)schedules=JSON.parse(s);}}
 function saveScheduleLocal(){localStorage.setItem('fp_schedule',JSON.stringify(schedules));}
 
 function renderSchedule(){
