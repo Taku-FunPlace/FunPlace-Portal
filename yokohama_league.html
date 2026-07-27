@@ -866,7 +866,8 @@ function getToken() {
 function saveToken() {
   const t = document.getElementById('tokenInput').value.trim();
   if (!t) { alert('Tokenを入力してください'); return; }
-    document.getElementById('tokenArea').style.display = 'none';
+  localStorage.setItem('github_token', t);
+  document.getElementById('tokenArea').style.display = 'none';
   document.getElementById('githubStatus').style.color = '#4caf50';
   document.getElementById('githubStatus').textContent = '✅ Token保存しました';
   setTimeout(() => { document.getElementById('githubStatus').textContent = ''; }, 2000);
@@ -914,9 +915,54 @@ async function uploadToGitHub() {
     }
     // localStorageのデータを収集（Tokenは除外）
     const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
-    let initScript = '<script id="__ls_init__">window.__serverData={};
-window.__serverData["yokohama_league_2026"]="{\"0_1\":{\"a\":2,\"b\":3}}";
-window.__serverData["yokohama_league_2026_schedule"]="[{\"date\":\"2026-09-06\",\"teamA\":5,\"teamB\":1},{\"date\":\"2026-09-06\",\"teamA\":4,\"teamB\":0},{\"date\":\"2026-10-24\",\"teamA\":4,\"teamB\":2},{\"date\":\"2026-10-24\",\"teamA\":5,\"teamB\":3},{\"date\":\"2026-11-07\",\"teamA\":0,\"teamB\":5},{\"date\":\"2026-11-07\",\"teamA\":1,\"teamB\":2},{\"date\":\"2026-11-15\",\"teamA\":0,\"teamB\":2},{\"date\":\"2026-11-15\",\"teamA\":3,\"teamB\":1},{\"date\":\"2027-02-07\",\"teamA\":3,\"teamB\":2},{\"date\":\"2027-02-07\",\"teamA\":1,\"teamB\":4},{\"date\":\"2027-02-21\",\"teamA\":4,\"teamB\":5},{\"date\":\"2027-02-21\",\"teamA\":0,\"teamB\":1},{\"date\":\"2027-03-21\",\"teamA\":2,\"teamB\":5},{\"date\":\"2027-03-21\",\"teamA\":3,\"teamB\":0},{\"date\":\"2027-03-27\",\"teamA\":3,\"teamB\":4}]";
+    let initScript = '<script id="__ls_init__">window.__serverData={};\n';
+    dataKeys.forEach(function(k) {
+      const v = localStorage.getItem(k);
+      if (v) initScript += 'window.__serverData[' + JSON.stringify(k) + ']=' + JSON.stringify(v) + ';\n';
+    });
+    initScript += '<\/script>';
+    // 既存の初期化スクリプトを置き換えるか、なければ</head>直前に挿入
+    let updatedHTML;
+    if (baseHTML.includes('id="__ls_init__"')) {
+      updatedHTML = baseHTML.replace(/<script id="__ls_init__">[\s\S]*?<\/script>/, initScript);
+    } else {
+      updatedHTML = baseHTML.replace('</head>', initScript + '\n</head>');
+    }
+    const content = btoa(unescape(encodeURIComponent(updatedHTML)));
+    const putRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: '市リーグ結果を更新', content: content, sha: sha, branch: GITHUB_BRANCH })
+      }
+    );
+    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
+    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
+  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
+}
+
+
+function switchToEditMode() {
+  document.body.classList.remove('view-mode');
+  document.getElementById('viewModeBanner').style.display = 'none';
+  document.getElementById('editModeBanner').style.display = 'block';
+}
+function switchToViewMode() {
+  document.body.classList.add('view-mode');
+  document.getElementById('editModeBanner').style.display = 'none';
+  document.getElementById('viewModeBanner').style.display = 'block';
+}
+
+
+function render() { renderCross(); renderStandings(); renderStats(); }
+
+const fromURL=loadFromURL();
+if(!fromURL) { load(); loadSchedules(); }
+document.body.classList.add('view-mode');
+document.getElementById('viewModeBanner').style.display='block';
+render();
+renderSchedule();
 </script>
 </body>
 </html>
