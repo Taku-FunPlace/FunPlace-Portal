@@ -627,9 +627,29 @@ function key(i, j) { const lo=Math.min(i,j),hi=Math.max(i,j); return lo+'_'+hi; 
 function getResult(i,j) { return results[key(i,j)]||null; }
 function scoreFor(i,j) { const r=getResult(i,j); if(!r) return null; return i<j?r.a:r.b; }
 
-function load() { try { if(window.__serverData && window.__serverData[STORAGE_KEY]){ results=JSON.parse(window.__serverData[STORAGE_KEY]); localStorage.setItem(STORAGE_KEY, window.__serverData[STORAGE_KEY]); } else { const s=localStorage.getItem(STORAGE_KEY); if(s) results=JSON.parse(s); } } catch(e){} }
+function load() {
+  try {
+    if(window.__serverData && window.__serverData[STORAGE_KEY]) {
+      results = JSON.parse(window.__serverData[STORAGE_KEY]);
+      localStorage.setItem(STORAGE_KEY, window.__serverData[STORAGE_KEY]);
+    } else {
+      const s = localStorage.getItem(STORAGE_KEY);
+      if(s) results = JSON.parse(s);
+    }
+  } catch(e) {}
+}
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(results)); }
-function loadSchedules() { try { if(window.__serverData && window.__serverData[STORAGE_SCHED_KEY]){ schedules=JSON.parse(window.__serverData[STORAGE_SCHED_KEY]); localStorage.setItem(STORAGE_SCHED_KEY, window.__serverData[STORAGE_SCHED_KEY]); } else { const s=localStorage.getItem(STORAGE_SCHED_KEY); if(s) schedules=JSON.parse(s); } } catch(e){} }
+function loadSchedules() {
+  try {
+    if(window.__serverData && window.__serverData[STORAGE_SCHED_KEY]) {
+      schedules = JSON.parse(window.__serverData[STORAGE_SCHED_KEY]);
+      localStorage.setItem(STORAGE_SCHED_KEY, window.__serverData[STORAGE_SCHED_KEY]);
+    } else {
+      const s = localStorage.getItem(STORAGE_SCHED_KEY);
+      if(s) schedules = JSON.parse(s);
+    }
+  } catch(e) {}
+}
 function saveSchedules() { localStorage.setItem(STORAGE_SCHED_KEY, JSON.stringify(schedules)); }
 
 function manualSave() {
@@ -902,26 +922,23 @@ async function uploadToGitHub() {
       const gd = await getRes.json();
       sha = gd.sha;
       baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
-      // Tokenをすべて除去（セキュリティ対策）
+      // Tokenを除去（セキュリティ対策）
       const tokenVal = getToken();
       if (tokenVal) {
         const escaped = tokenVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         baseHTML = baseHTML.replace(new RegExp(escaped, 'g'), '');
       }
-      // tokenInputの値をクリア
       baseHTML = baseHTML.replace(/(<input[^>]+id="tokenInput"[^>]*value=")[^"]*"/g, '$1"');
-      // github_tokenのlocalStorage初期化を除去
       baseHTML = baseHTML.replace(/localStorage\.setItem\(["']github_token["'][^)]+\);\n?/g, '');
     }
-    // localStorageのデータを収集（Tokenは除外）
-    const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
+    // データをwindow.__serverDataとして埋め込む
+    const dataKeys = [STORAGE_KEY, STORAGE_SCHED_KEY];
     let initScript = '<script id="__ls_init__">window.__serverData={};\n';
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
       if (v) initScript += 'window.__serverData[' + JSON.stringify(k) + ']=' + JSON.stringify(v) + ';\n';
     });
     initScript += '<\/script>';
-    // 既存の初期化スクリプトを置き換えるか、なければ</head>直前に挿入
     let updatedHTML;
     if (baseHTML.includes('id="__ls_init__"')) {
       updatedHTML = baseHTML.replace(/<script id="__ls_init__">[\s\S]*?<\/script>/, initScript);
@@ -937,9 +954,22 @@ async function uploadToGitHub() {
         body: JSON.stringify({ message: '市リーグ結果を更新', content: content, sha: sha, branch: GITHUB_BRANCH })
       }
     );
-    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
-    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
-  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
+
+    if (putRes.ok) {
+      status.style.color = '#66bb6a';
+      status.textContent = '✅ GitHubに保存しました！';
+      // localStorageにも保存
+      save();
+      saveSchedules();
+    } else {
+      const err = await putRes.json();
+      status.style.color = '#ef5350';
+      status.textContent = '❌ エラー: ' + (err.message || '不明なエラー');
+    }
+  } catch(e) {
+    status.style.color = '#ef5350';
+    status.textContent = '❌ 通信エラーが発生しました';
+  }
 }
 
 
