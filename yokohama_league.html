@@ -903,8 +903,8 @@ async function uploadToGitHub() {
       sha = gd.sha;
       baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
     }
-    // localStorageの全データを収集してHTMLに埋め込む
-    const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule', 'github_token'];
+    // localStorageのデータを収集（Tokenは除外）
+    const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
     let initScript = '<script id="__ls_init__">\n';
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
