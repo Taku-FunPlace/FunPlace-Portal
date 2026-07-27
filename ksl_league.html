@@ -906,8 +906,7 @@ function getToken() {
 function saveToken() {
   const t = document.getElementById('tokenInput').value.trim();
   if (!t) { alert('Tokenを入力してください'); return; }
-  localStorage.setItem('github_token', t);
-  document.getElementById('tokenArea').style.display = 'none';
+    document.getElementById('tokenArea').style.display = 'none';
   document.getElementById('githubStatus').style.color = '#4caf50';
   document.getElementById('githubStatus').textContent = '✅ Token保存しました';
   setTimeout(() => { document.getElementById('githubStatus').textContent = ''; }, 2000);
@@ -955,108 +954,9 @@ async function uploadToGitHub() {
     }
     // localStorageのデータを収集（Tokenは除外）
     const dataKeys = ['ksl3l_2026', 'ksl3l_2026_schedule'];
-    let initScript = '<script id="__ls_init__">\n';
-    dataKeys.forEach(function(k) {
-      const v = localStorage.getItem(k);
-      if (v) initScript += 'localStorage.setItem(' + JSON.stringify(k) + ', ' + JSON.stringify(v) + ');\n';
-    });
-    initScript += '<\/script>';
-    // 既存の初期化スクリプトを置き換えるか、なければ</head>直前に挿入
-    let updatedHTML;
-    if (baseHTML.includes('id="__ls_init__"')) {
-      updatedHTML = baseHTML.replace(/<script id="__ls_init__">[\s\S]*?<\/script>/, initScript);
-    } else {
-      updatedHTML = baseHTML.replace('</head>', initScript + '\n</head>');
-    }
-    const content = btoa(unescape(encodeURIComponent(updatedHTML)));
-    const putRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
-      {
-        method: 'PUT',
-        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'リーグ結果を更新', content: content, sha: sha, branch: GITHUB_BRANCH })
-      }
-    );
-    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
-    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
-  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
-}
-
-
-function switchToEditMode() {
-  document.body.classList.remove('view-mode');
-  document.getElementById('viewModeBanner').style.display = 'none';
-  document.getElementById('editModeBanner').style.display = 'block';
-}
-function switchToViewMode() {
-  document.body.classList.add('view-mode');
-  document.getElementById('editModeBanner').style.display = 'none';
-  document.getElementById('viewModeBanner').style.display = 'block';
-}
-
-// ===== SHARE =====
-function generateShareLink() {
-  const data = {
-    r: results,
-    s: schedules
-  };
-  const json = JSON.stringify(data);
-  // compress using base64
-  const encoded = btoa(unescape(encodeURIComponent(json)));
-  const url = location.href.split('?')[0].split('#')[0] + '?d=' + encoded;
-  document.getElementById('shareLinkBox').textContent = url;
-  document.getElementById('shareLinkArea').style.display = 'block';
-  document.getElementById('copyDone').style.display = 'none';
-}
-
-function copyShareLink() {
-  const url = document.getElementById('shareLinkBox').textContent;
-  navigator.clipboard.writeText(url).then(() => {
-    document.getElementById('copyDone').style.display = 'block';
-    setTimeout(() => { document.getElementById('copyDone').style.display = 'none'; }, 2000);
-  }).catch(() => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    document.getElementById('copyDone').style.display = 'block';
-    setTimeout(() => { document.getElementById('copyDone').style.display = 'none'; }, 2000);
-  });
-}
-
-// URLからデータを読み込む
-function loadFromURL() {
-  const params = new URLSearchParams(location.search);
-  const d = params.get('d');
-  if (!d) return false;
-  try {
-    const json = decodeURIComponent(escape(atob(d)));
-    const data = JSON.parse(json);
-    if (data.r) results = data.r;
-    if (data.s) schedules = data.s;
-    // 閲覧モード
-    document.body.classList.add('view-mode');
-    document.getElementById('viewModeBanner').style.display = 'block';
-    return true;
-  } catch(e) {
-    console.error('URL data parse error:', e);
-    return false;
-  }
-}
-
-const fromURL = loadFromURL();
-if(!fromURL) {
-  load();
-  loadSchedules();
-}
-// デフォルトは閲覧モード
-document.body.classList.add('view-mode');
-document.getElementById('viewModeBanner').style.display = 'block';
-render();
-renderSchedule();
+    let initScript = '<script id="__ls_init__">
+localStorage.setItem("ksl3l_2026", "{\"0_1\":{\"a\":0,\"b\":2},\"2_5\":{\"a\":0,\"b\":2},\"6_7\":{\"a\":2,\"b\":0},\"2_4\":{\"a\":0,\"b\":4},\"0_6\":{\"a\":0,\"b\":2},\"3_6\":{\"a\":1,\"b\":1},\"2_7\":{\"a\":0,\"b\":4},\"1_4\":{\"a\":0,\"b\":2},\"4_5\":{\"a\":4,\"b\":0}}");
+localStorage.setItem("ksl3l_2026_schedule", "[{\"date\":\"2026-08-16\",\"teamA\":6,\"teamB\":5}]");
 </script>
 </body>
 </html>
