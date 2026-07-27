@@ -289,7 +289,7 @@ function saveNotice(){
 function delNotice(idx){if(!confirm('削除しますか？'))return;notices.splice(idx,1);saveNoticesLocal();renderNotices();}
 
 // ===== SCHEDULE =====
-var schedules=[];
+var schedules=[{"date":"2026/08/16","dow":"日","opponent":"未定","venue":"フロンタウン生田","time":"11:00"}];
 function loadSchedule(){}else{var s=localStorage.getItem('fp_schedule');if(s)schedules=JSON.parse(s);}}
 function saveScheduleLocal(){localStorage.setItem('fp_schedule',JSON.stringify(schedules));}
 
