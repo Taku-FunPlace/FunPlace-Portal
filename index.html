@@ -8,241 +8,97 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: #111;
-  color: #e8e8e8;
-  font-family: system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-}
+body { background: #111; color: #e8e8e8; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; }
 
-/* ===== HERO ===== */
-.hero {
-  background: #1a1a1a;
-  position: relative;
-  padding: 36px 24px 28px;
-  text-align: center;
-  border-bottom: 2px solid #2d8c3c;
-  overflow: hidden;
-}
-.hero-pitch {
-  position: absolute;
-  inset: 0;
-  opacity: 0.04;
-  background-image:
-    repeating-linear-gradient(90deg, #4ecb71 0, #4ecb71 1px, transparent 1px, transparent 55px),
-    repeating-linear-gradient(0deg,  #4ecb71 0, #4ecb71 1px, transparent 1px, transparent 55px);
-}
-.emblem {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #2d8c3c;
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
-}
-.badge {
-  display: inline-block;
-  background: #1e3a28;
-  border: 1px solid #2d8c3c;
-  color: #4ecb71;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
-}
-.team-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 48px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  letter-spacing: -1px;
-  position: relative;
-  z-index: 1;
-}
+/* HERO */
+.hero { background: #1a1a1a; position: relative; padding: 32px 24px 24px; text-align: center; border-bottom: 2px solid #2d8c3c; overflow: hidden; }
+.hero-pitch { position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(90deg,#4ecb71 0,#4ecb71 1px,transparent 1px,transparent 55px), repeating-linear-gradient(0deg,#4ecb71 0,#4ecb71 1px,transparent 1px,transparent 55px); }
+.emblem { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid #2d8c3c; margin-bottom: 10px; position: relative; z-index: 1; }
+.badge { display: inline-block; background: #1e3a28; border: 1px solid #2d8c3c; color: #4ecb71; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; font-weight: 700; position: relative; z-index: 1; }
+.team-name { font-family: 'Barlow Condensed', sans-serif; font-size: 46px; font-weight: 800; color: #fff; line-height: 1; letter-spacing: -1px; position: relative; z-index: 1; }
 .team-name span { color: #9e9e9e; }
-.team-sub {
-  font-size: 11px;
-  color: #888;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-top: 5px;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
-
-/* ===== STATS ===== */
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 0;
-  position: relative;
-  z-index: 1;
-  background: #111;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #2a2a2a;
-  max-width: 360px;
-  margin: 0 auto;
-}
-.stat {
-  flex: 1;
-  padding: 12px 4px;
-  text-align: center;
-  border-right: 1px solid #2a2a2a;
-}
+.team-sub { font-size: 11px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; margin-bottom: 16px; position: relative; z-index: 1; }
+.stats { display: flex; justify-content: center; gap: 0; position: relative; z-index: 1; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #2a2a2a; max-width: 360px; margin: 0 auto; }
+.stat { flex: 1; padding: 10px 4px; text-align: center; border-right: 1px solid #2a2a2a; }
 .stat:last-child { border-right: none; }
-.stat-n {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1;
-}
-.stat-n.w { color: #4ecb71; }
-.stat-n.d { color: #aaa; }
-.stat-n.l { color: #ef5350; }
-.stat-n.rank { color: #fff; }
-.stat-n.pts { color: #4ecb71; }
-.stat-l {
-  font-size: 10px;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 2px;
-}
+.stat-n { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 700; line-height: 1; }
+.stat-n.w { color: #4ecb71; } .stat-n.d { color: #aaa; } .stat-n.l { color: #ef5350; } .stat-n.rank { color: #fff; } .stat-n.pts { color: #4ecb71; }
+.stat-l { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
-/* ===== SECTION ===== */
-.section { padding: 18px 16px 6px; }
-.section-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #4ecb71;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #2a2a2a;
-}
+/* MODE BANNERS */
+.mode-banner { margin: 0; padding: 3px 16px; font-size: 10px; display: flex; align-items: center; background: #111; color: #444; }
+.mode-switch { margin-left: auto; font-size: 10px; color: #555; cursor: pointer; text-decoration: underline; }
 
-/* ===== TOOLS ===== */
-.tools {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 10px 16px 16px;
-}
-.tool-card {
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 10px;
-  padding: 14px;
-  text-decoration: none;
-  display: block;
-  transition: border-color 0.15s, background 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.tool-card:active {
-  border-color: #4ecb71;
-  background: #1e2e1e;
-}
-.tool-icon { font-size: 22px; margin-bottom: 6px; }
-.tool-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: #e8e8e8;
-  letter-spacing: 0.3px;
-}
+/* SECTION */
+.section { padding: 16px 16px 6px; }
+.section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #4ecb71; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
+
+/* TOOLS */
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 14px; }
+.tool-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px; text-decoration: none; display: block; -webkit-tap-highlight-color: transparent; }
+.tool-card:active { border-color: #4ecb71; background: #1e2e1e; }
+.tool-icon { font-size: 20px; margin-bottom: 6px; }
+.tool-name { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; color: #e8e8e8; }
 .tool-desc { font-size: 11px; color: #888; margin-top: 2px; }
 .tool-arrow { font-size: 11px; color: #4ecb71; margin-top: 8px; }
 
-/* ===== SCHEDULE ===== */
-.matches { padding: 0 16px 16px; }
-.match {
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 8px;
-  padding: 11px 13px;
-  margin-bottom: 7px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.match-date {
-  font-size: 11px;
-  color: #888;
-  min-width: 48px;
-  text-align: center;
-  line-height: 1.4;
-}
-.match-date strong {
-  display: block;
-  font-size: 18px;
-  font-family: 'Barlow Condensed', sans-serif;
-  color: #e8e8e8;
-  font-weight: 700;
-  line-height: 1;
-}
-.match-div { width: 1px; height: 30px; background: #2a2a2a; }
+/* NOTICES */
+.notices-area { padding: 0 16px 8px; }
+.notice-item { background: #1a1a1a; border-left: 3px solid #4ecb71; border-radius: 0 8px 8px 0; padding: 12px 13px; margin-bottom: 8px; }
+.notice-date { font-size: 10px; color: #888; margin-bottom: 3px; letter-spacing: 1px; }
+.notice-title { font-size: 14px; font-weight: 700; color: #e8e8e8; margin-bottom: 4px; }
+.notice-body { font-size: 12px; color: #999; line-height: 1.6; }
+.notice-actions { margin-top: 8px; display: flex; gap: 8px; }
+.btn-edit-item { background: #1e3a28; border: 1px solid #2d8c3c; color: #4ecb71; font-size: 11px; padding: 3px 9px; border-radius: 4px; cursor: pointer; }
+.btn-del-item { background: #2a1a1a; border: 1px solid #5a2020; color: #ef5350; font-size: 11px; padding: 3px 9px; border-radius: 4px; cursor: pointer; }
+.no-item { color: #888; font-size: 12px; text-align: center; padding: 12px 0; }
+
+/* SCHEDULE */
+.matches { padding: 0 16px 8px; }
+.match { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px; margin-bottom: 7px; display: flex; align-items: center; gap: 10px; }
+.match-date { font-size: 11px; color: #888; min-width: 44px; text-align: center; line-height: 1.4; }
+.match-date strong { display: block; font-size: 17px; font-family: 'Barlow Condensed', sans-serif; color: #e8e8e8; font-weight: 700; line-height: 1; }
+.match-div { width: 1px; height: 28px; background: #2a2a2a; }
 .match-info { flex: 1; }
 .match-vs { font-size: 13px; color: #e8e8e8; font-weight: 600; }
-.match-venue { font-size: 11px; color: #888; margin-top: 2px; }
-.next-badge {
-  background: #4ecb71;
-  color: #111;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 3px;
-  white-space: nowrap;
-}
-.no-schedule {
-  color: #888;
-  font-size: 12px;
-  padding: 8px 0;
-  text-align: center;
-}
+.match-venue { font-size: 11px; color: #888; margin-top: 1px; }
+.next-badge { background: #4ecb71; color: #111; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; white-space: nowrap; }
+.match-del { background: none; border: none; color: #555; font-size: 16px; cursor: pointer; padding: 2px 6px; }
 
-/* ===== NOTICE ===== */
-.notices { padding: 0 16px 16px; }
-.notice {
-  background: #1a1a1a;
-  border-left: 3px solid #9e9e9e;
-  border-radius: 0 8px 8px 0;
-  padding: 11px 13px;
-  margin-bottom: 8px;
-}
-.notice-date { font-size: 10px; color: #888; margin-bottom: 3px; }
-.notice-title { font-size: 13px; font-weight: 700; color: #e8e8e8; margin-bottom: 3px; }
-.notice-body { font-size: 12px; color: #999; line-height: 1.6; }
+/* ADD / EDIT BUTTONS */
+.btn-add { display: block; width: calc(100% - 32px); margin: 0 16px 14px; background: #1e3a28; border: 1px solid #2d8c3c; color: #4ecb71; font-size: 13px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; }
 
-/* ===== FOOTER ===== */
-footer {
-  text-align: center;
-  padding: 14px;
-  border-top: 1px solid #1e1e1e;
-}
+/* GITHUB */
+.github-section { margin: 0 16px 14px; }
+.btn-github { width: 100%; background: #24292e; border: 1px solid #444; color: #e8e8e8; font-size: 13px; font-weight: 700; padding: 11px; border-radius: 8px; cursor: pointer; }
+.btn-github:hover { background: #1a2530; }
+.github-status { font-size: 11px; text-align: center; margin-top: 6px; min-height: 16px; }
+.token-area { margin-top: 10px; display: none; }
+.token-input { width: 100%; background: #0d1117; border: 1px solid #333; color: #e8e8e8; font-size: 12px; padding: 8px 10px; border-radius: 4px; margin-bottom: 6px; }
+.btn-token-save { width: 100%; background: #1e3a28; border: 1px solid #2d8c3c; color: #4ecb71; font-size: 12px; font-weight: 700; padding: 7px; border-radius: 4px; cursor: pointer; }
+.token-link { display: block; text-align: center; margin-top: 6px; font-size: 10px; color: #888; cursor: pointer; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; width: 90%; max-width: 400px; }
+.modal-title { font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 700; color: #4ecb71; margin-bottom: 14px; }
+.modal label { display: block; font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; margin-top: 12px; }
+.modal input, .modal textarea, .modal select { width: 100%; background: #111; border: 1px solid #333; color: #e8e8e8; font-size: 13px; padding: 8px 10px; border-radius: 6px; font-family: inherit; }
+.modal textarea { height: 70px; resize: vertical; }
+.modal-btns { display: flex; gap: 8px; margin-top: 14px; }
+.btn-modal-save { flex: 1; background: #2d8c3c; border: none; color: #fff; font-size: 13px; font-weight: 700; padding: 10px; border-radius: 6px; cursor: pointer; }
+.btn-modal-cancel { flex: 1; background: #2a2a2a; border: none; color: #aaa; font-size: 13px; padding: 10px; border-radius: 6px; cursor: pointer; }
+
+/* VIEW MODE */
+body.view-mode .edit-only { display: none !important; }
+
+footer { text-align: center; padding: 14px; border-top: 1px solid #1e1e1e; margin-top: 8px; }
 footer span { font-size: 10px; color: #444; letter-spacing: 1px; text-transform: uppercase; }
 </style>
 </head>
-<body>
+<body class="view-mode">
 
 <!-- HERO -->
 <div class="hero">
@@ -260,6 +116,16 @@ footer span { font-size: 10px; color: #444; letter-spacing: 1px; text-transform:
   </div>
 </div>
 
+<!-- MODE BANNERS -->
+<div class="mode-banner" id="viewBanner">
+  👀 閲覧モード
+  <span class="mode-switch" onclick="switchMode('edit')">編集モードへ</span>
+</div>
+<div class="mode-banner edit-only" id="editBanner" style="display:none; color:#8c2d2d;">
+  ✏️ 編集モード
+  <span class="mode-switch" onclick="switchMode('view')">閲覧モードへ</span>
+</div>
+
 <!-- TOOLS -->
 <div class="section"><div class="section-title">チームツール</div></div>
 <div class="tools">
@@ -269,10 +135,10 @@ footer span { font-size: 10px; color: #444; letter-spacing: 1px; text-transform:
     <div class="tool-desc">KSL-3L 順位・成績</div>
     <div class="tool-arrow">開く →</div>
   </a>
-  <a class="tool-card" href="funplace_lineup.html">
-    <div class="tool-icon">⚽</div>
-    <div class="tool-name">フォーメーション</div>
-    <div class="tool-desc">スタメン・布陣</div>
+  <a class="tool-card" href="yokohama_league.html">
+    <div class="tool-icon">🥇</div>
+    <div class="tool-name">市リーグ表</div>
+    <div class="tool-desc">横浜市リーグ 順位・成績</div>
     <div class="tool-arrow">開く →</div>
   </a>
   <a class="tool-card" href="#videos">
@@ -281,179 +147,229 @@ footer span { font-size: 10px; color: #444; letter-spacing: 1px; text-transform:
     <div class="tool-desc">マッチ映像アーカイブ</div>
     <div class="tool-arrow">開く →</div>
   </a>
-  <a class="tool-card" href="#notices">
-    <div class="tool-icon">📋</div>
-    <div class="tool-name">お知らせ</div>
-    <div class="tool-desc">チーム連絡・掲示板</div>
-    <div class="tool-arrow">見る →</div>
+  <a class="tool-card" href="funplace_lineup.html">
+    <div class="tool-icon">⚽</div>
+    <div class="tool-name">フォーメーション</div>
+    <div class="tool-desc">スタメン・布陣</div>
+    <div class="tool-arrow">開く →</div>
   </a>
 </div>
 
+<!-- NOTICES -->
+<div class="section"><div class="section-title">お知らせ</div></div>
+<div class="notices-area" id="noticesArea"></div>
+<button class="btn-add edit-only" onclick="openNoticeModal(-1)">＋ お知らせを追加</button>
+
 <!-- SCHEDULE -->
 <div class="section"><div class="section-title">試合スケジュール</div></div>
-<div class="matches" id="schedule-area">
-  <div class="no-schedule">スケジュールを読み込み中...</div>
-</div>
+<div class="matches" id="scheduleArea"></div>
+<button class="btn-add edit-only" onclick="openScheduleModal(-1)">＋ 試合予定を追加</button>
 
-<!-- VIDEOS -->
+<!-- VIDEOS (placeholder) -->
 <div class="section" id="videos"><div class="section-title">試合動画</div></div>
-<div class="notices">
-  <!-- ↓ 試合動画はここに追加してください ↓ -->
-  <div class="notice">
-    <div class="notice-date">2026/07/04</div>
-    <div class="notice-title">動画準備中</div>
-    <div class="notice-body">試合動画は順次アップ予定です。</div>
+<div style="padding: 0 16px 16px;">
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:16px;text-align:center;color:#888;font-size:12px;">
+    動画は順次追加予定です
   </div>
-  <!-- ↑ 試合動画はここに追加してください ↑ -->
 </div>
 
-<!-- NOTICES -->
-<div class="section" id="notices"><div class="section-title">お知らせ</div></div>
-<div class="notices">
-  <!-- ↓ お知らせはここに追加してください ↓ -->
-  <div class="notice">
-    <div class="notice-date">2026/06/28</div>
-    <div class="notice-title">ホームページを開設しました</div>
-    <div class="notice-body">チーム内共有ポータルを開設しました。リーグ表・フォーメーションビルダーはこちらからアクセスできます。</div>
+<!-- GITHUB (編集モードのみ) -->
+<div class="github-section edit-only">
+  <button class="btn-github" onclick="uploadToGitHub()">⬆️ GitHubに保存・公開</button>
+  <div class="github-status" id="githubStatus"></div>
+  <div class="token-area" id="tokenArea">
+    <div style="font-size:11px;color:#4ecb71;margin-bottom:6px;">GitHub Personal Access Token</div>
+    <input class="token-input" type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+    <button class="btn-token-save" onclick="saveToken()">Tokenを保存</button>
   </div>
-  <!-- ↑ お知らせはここに追加してください ↑ -->
+  <span class="token-link edit-only" onclick="toggleTokenArea()">🔑 Token設定</span>
+</div>
+
+<!-- お知らせモーダル -->
+<div class="modal-overlay" id="noticeModal">
+  <div class="modal">
+    <div class="modal-title" id="noticeMTitle">お知らせを追加</div>
+    <label>日付</label>
+    <input type="date" id="nDate">
+    <label>タイトル</label>
+    <input type="text" id="nTitle" placeholder="例：練習日程変更のお知らせ">
+    <label>内容</label>
+    <textarea id="nBody" placeholder="詳細内容を入力..."></textarea>
+    <div class="modal-btns">
+      <button class="btn-modal-save" onclick="saveNotice()">保存</button>
+      <button class="btn-modal-cancel" onclick="closeModal('noticeModal')">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<!-- 試合モーダル -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal">
+    <div class="modal-title">試合予定を追加</div>
+    <label>日付</label>
+    <input type="date" id="sDate">
+    <label>曜日</label>
+    <select id="sDow">
+      <option value="日">日</option><option value="月">月</option><option value="火">火</option>
+      <option value="水">水</option><option value="木">木</option><option value="金">金</option><option value="土">土</option>
+    </select>
+    <label>対戦相手</label>
+    <input type="text" id="sOpponent" placeholder="例：横浜FC鶴見">
+    <label>会場</label>
+    <input type="text" id="sVenue" placeholder="例：三ツ沢公園">
+    <label>時間</label>
+    <input type="text" id="sTime" placeholder="例：10:00">
+    <div class="modal-btns">
+      <button class="btn-modal-save" onclick="saveSchedule()">保存</button>
+      <button class="btn-modal-cancel" onclick="closeModal('scheduleModal')">キャンセル</button>
+    </div>
+  </div>
 </div>
 
 <footer><span>FUNPLACE横浜 チーム内ポータル</span></footer>
 
 <script>
-// ===== ksl_league.html と同じlocalStorageキーから成績・スケジュールを取得 =====
-const N = 8;
-const MY_TEAM = 0;
-const TEAMS = [
-  { id: 0, name: 'FUNPLACE横浜' },
-  { id: 1, name: 'チーム2' },
-  { id: 2, name: 'チーム3' },
-  { id: 3, name: 'チーム4' },
-  { id: 4, name: 'チーム5' },
-  { id: 5, name: 'チーム6' },
-  { id: 6, name: 'チーム7' },
-  { id: 7, name: 'チーム8' },
-];
+// ===== KSL STATS =====
+var N=8, MY=0;
+function key(i,j){return i<j?i+'_'+j:j+'_'+i;}
+function scoreFor(i,j){var r=results[key(i,j)];if(!r)return 0;return i<j?r.a:r.b;}
+var results={};
+function loadStats(){var s=localStorage.getItem('ksl3l_2026');if(s)results=JSON.parse(s);}
+function calcStats(){var w=0,d=0,l=0,gf=0,ga=0;for(var j=0;j<N;j++){if(j===MY)continue;var r=results[key(MY,j)];if(!r)continue;var sf=scoreFor(MY,j),sa=scoreFor(j,MY);gf+=sf;ga+=sa;if(sf>sa)w++;else if(sf===sa)d++;else l++;}return{w:w,d:d,l:l,pts:w*3+d};}
+function calcRank(){var st=[];for(var i=0;i<N;i++){var w=0,d=0,l=0,gf=0,ga=0;for(var j=0;j<N;j++){if(i===j)continue;var r=results[key(i,j)];if(!r)continue;var sf=scoreFor(i,j),sa=scoreFor(j,i);gf+=sf;ga+=sa;if(sf>sa)w++;else if(sf===sa)d++;else l++;}st.push({id:i,pts:w*3+d,gd:gf-ga,gf:gf});}st.sort(function(a,b){return b.pts-a.pts||b.gd-a.gd||b.gf-a.gf;});for(var k=0;k<st.length;k++){if(st[k].id===MY)return k+1;}return '-';}
+function renderStats(){loadStats();var s=calcStats();var played=s.w+s.d+s.l;if(played===0){['st-w','st-d','st-l','st-pts','st-rank'].forEach(function(id){document.getElementById(id).textContent='-';});return;}document.getElementById('st-w').textContent=s.w;document.getElementById('st-d').textContent=s.d;document.getElementById('st-l').textContent=s.l;document.getElementById('st-pts').textContent=s.pts;document.getElementById('st-rank').textContent=calcRank()+'位';}
 
-function key(i, j) { return i < j ? i + '_' + j : j + '_' + i; }
-
-function scoreFor(i, j) {
-  const r = results[key(i, j)];
-  if (!r) return 0;
-  return i < j ? r.a : r.b;
+// ===== MODE =====
+var isEdit=false;
+function switchMode(m){
+  isEdit=(m==='edit');
+  document.body.classList.toggle('view-mode',!isEdit);
+  document.getElementById('viewBanner').style.display=isEdit?'none':'flex';
+  document.getElementById('editBanner').style.display=isEdit?'flex':'none';
+  renderNotices();renderSchedule();
 }
 
-let results = {};
-let schedules = [];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function loadData() {
-  const s = localStorage.getItem('ksl3l_2026');
-  if (s) results = JSON.parse(s);
-  const sc = localStorage.getItem('ksl3l_2026_schedule');
-  if (sc) schedules = JSON.parse(sc);
-}
-
-function calcStats() {
-  let w = 0, d = 0, l = 0, gf = 0, ga = 0;
-  for (let j = 0; j < N; j++) {
-    if (j === MY_TEAM) continue;
-    const r = results[key(MY_TEAM, j)];
-    if (!r) continue;
-    const sf = scoreFor(MY_TEAM, j);
-    const sa = scoreFor(j, MY_TEAM);
-    gf += sf; ga += sa;
-    if (sf > sa) w++;
-    else if (sf === sa) d++;
-    else l++;
+// ===== NOTICES =====
+var notices=[];
+var editNoticeIdx=-1;
+function loadNotices(){var s=localStorage.getItem('fp_notices');if(s)notices=JSON.parse(s);else notices=[{date:'2026/07/05',title:'ホームページを開設しました',body:'チーム内共有ポータルを開設しました。'}];}
+function saveNoticesLocal(){localStorage.setItem('fp_notices',JSON.stringify(notices));}
+function renderNotices(){
+  var area=document.getElementById('noticesArea');
+  if(!notices.length){area.innerHTML='<div class="no-item">お知らせはありません</div>';return;}
+  var html='';
+  for(var i=0;i<notices.length;i++){
+    var n=notices[i];
+    html+='<div class="notice-item">'
+      +'<div class="notice-date">'+esc(n.date)+'</div>'
+      +'<div class="notice-title">'+esc(n.title)+'</div>'
+      +(n.body?'<div class="notice-body">'+esc(n.body).replace(/\n/g,'<br>')+'</div>':'')
+      +(isEdit?'<div class="notice-actions"><button class="btn-edit-item" onclick="openNoticeModal('+i+')">✏️ 編集</button><button class="btn-del-item" onclick="delNotice('+i+')">🗑 削除</button></div>':'')
+      +'</div>';
   }
-  return { w, d, l, gf, ga, pts: w * 3 + d };
+  area.innerHTML=html;
+}
+function openNoticeModal(idx){
+  editNoticeIdx=idx;
+  var today=new Date().toISOString().split('T')[0];
+  document.getElementById('noticeMTitle').textContent=idx===-1?'お知らせを追加':'お知らせを編集';
+  if(idx===-1){document.getElementById('nDate').value=today;document.getElementById('nTitle').value='';document.getElementById('nBody').value='';}
+  else{var n=notices[idx];document.getElementById('nDate').value=n.date.replace(/\//g,'-');document.getElementById('nTitle').value=n.title;document.getElementById('nBody').value=n.body||'';}
+  document.getElementById('noticeModal').classList.add('active');
+}
+function saveNotice(){
+  var d=document.getElementById('nDate').value,t=document.getElementById('nTitle').value.trim(),b=document.getElementById('nBody').value.trim();
+  if(!d||!t){alert('日付とタイトルは必須です');return;}
+  var obj={date:d.replace(/-/g,'/'),title:t,body:b};
+  if(editNoticeIdx===-1)notices.unshift(obj);else notices[editNoticeIdx]=obj;
+  saveNoticesLocal();renderNotices();closeModal('noticeModal');
+}
+function delNotice(idx){if(!confirm('削除しますか？'))return;notices.splice(idx,1);saveNoticesLocal();renderNotices();}
+
+// ===== SCHEDULE =====
+var schedules=[];
+function loadSchedule(){var s=localStorage.getItem('fp_schedule');if(s)schedules=JSON.parse(s);}
+function saveScheduleLocal(){localStorage.setItem('fp_schedule',JSON.stringify(schedules));}
+function renderSchedule(){
+  var area=document.getElementById('scheduleArea');
+  if(!schedules.length){area.innerHTML='<div class="no-item" style="padding:0 0 8px;">試合予定はありません</div>';return;}
+  var today=new Date();today.setHours(0,0,0,0);
+  var sorted=schedules.slice().sort(function(a,b){return new Date(a.date.replace(/\//g,'-'))-new Date(b.date.replace(/\//g,'-'));});
+  var nextDone=false;
+  var html='';
+  for(var i=0;i<sorted.length;i++){
+    var sc=sorted[i];
+    var d=new Date(sc.date.replace(/\//g,'-'));
+    var parts=sc.date.split('/');
+    var mon=parts[1]&&parts[1].replace(/^0/,'');
+    var day=parts[2]&&parts[2].replace(/^0/,'');
+    var isNext=(!nextDone&&d>=today);
+    if(isNext)nextDone=true;
+    // 元のindexを取得
+    var origIdx=schedules.indexOf(sc);
+    if(origIdx===-1)for(var k=0;k<schedules.length;k++){if(schedules[k].date===sc.date&&schedules[k].opponent===sc.opponent){origIdx=k;break;}}
+    html+='<div class="match">'
+      +'<div class="match-date"><strong>'+mon+'/'+day+'</strong>'+(sc.dow||'')+'</div>'
+      +'<div class="match-div"></div>'
+      +'<div class="match-info"><div class="match-vs">vs '+esc(sc.opponent||'相手未定')+'</div>'
+      +'<div class="match-venue">'+(sc.venue||'')+(sc.time?' '+sc.time:'')+'</div></div>'
+      +(isNext?'<div class="next-badge">NEXT</div>':'')
+      +(isEdit?'<button class="match-del" onclick="delSchedule('+origIdx+')">✕</button>':'')
+      +'</div>';
+  }
+  area.innerHTML=html;
+}
+function openScheduleModal(idx){
+  var today=new Date().toISOString().split('T')[0];
+  document.getElementById('sDate').value=today;
+  document.getElementById('sDow').value='日';
+  document.getElementById('sOpponent').value='';
+  document.getElementById('sVenue').value='';
+  document.getElementById('sTime').value='';
+  document.getElementById('scheduleModal').classList.add('active');
+}
+function saveSchedule(){
+  var d=document.getElementById('sDate').value;
+  var dow=document.getElementById('sDow').value;
+  var op=document.getElementById('sOpponent').value.trim();
+  var ve=document.getElementById('sVenue').value.trim();
+  var ti=document.getElementById('sTime').value.trim();
+  if(!d){alert('日付は必須です');return;}
+  schedules.push({date:d.replace(/-/g,'/'),dow:dow,opponent:op,venue:ve,time:ti});
+  saveScheduleLocal();renderSchedule();closeModal('scheduleModal');
+}
+function delSchedule(idx){if(!confirm('削除しますか？'))return;schedules.splice(idx,1);saveScheduleLocal();renderSchedule();}
+
+// ===== MODAL =====
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+
+// ===== GITHUB =====
+var GH_USER='Taku-FunPlace',GH_REPO='funplace-portal',GH_FILE='index.html',GH_BRANCH='main';
+function getToken(){return localStorage.getItem('github_token')||'';}
+function saveToken(){var t=document.getElementById('tokenInput').value.trim();if(!t){alert('Tokenを入力してください');return;}localStorage.setItem('github_token',t);document.getElementById('tokenArea').style.display='none';var s=document.getElementById('githubStatus');s.style.color='#4ecb71';s.textContent='✅ Token保存しました';setTimeout(function(){s.textContent='';},2000);}
+function toggleTokenArea(){var a=document.getElementById('tokenArea');a.style.display=a.style.display==='none'?'block':'none';if(a.style.display==='block')document.getElementById('tokenInput').value=getToken();}
+async function uploadToGitHub(){
+  var token=getToken();
+  if(!token){document.getElementById('tokenArea').style.display='block';var s=document.getElementById('githubStatus');s.style.color='#ffa726';s.textContent='⚠️ まずTokenを設定してください';return;}
+  var status=document.getElementById('githubStatus');
+  status.style.color='#81c784';status.textContent='⏳ アップロード中...';
+  try{
+    var getRes=await fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+GH_FILE,{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}});
+    var sha='';if(getRes.ok){var gd=await getRes.json();sha=gd.sha;}
+    var html=document.documentElement.outerHTML;
+    var content=btoa(unescape(encodeURIComponent(html)));
+    var putRes=await fetch('https://api.github.com/repos/'+GH_USER+'/'+GH_REPO+'/contents/'+GH_FILE,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify({message:'ページを更新',content:content,sha:sha,branch:GH_BRANCH})});
+    if(putRes.ok){status.style.color='#66bb6a';status.textContent='✅ GitHubに保存しました！';}
+    else{var err=await putRes.json();status.style.color='#ef5350';status.textContent='❌ エラー: '+(err.message||'不明なエラー');}
+  }catch(e){status.style.color='#ef5350';status.textContent='❌ 通信エラー';}
 }
 
-function calcRank() {
-  const standings = [];
-  for (let i = 0; i < N; i++) {
-    let w = 0, d = 0, l = 0, gf = 0, ga = 0;
-    for (let j = 0; j < N; j++) {
-      if (i === j) continue;
-      const r = results[key(i, j)];
-      if (!r) continue;
-      const sf = scoreFor(i, j);
-      const sa = scoreFor(j, i);
-      gf += sf; ga += sa;
-      if (sf > sa) w++;
-      else if (sf === sa) d++;
-      else l++;
-    }
-    standings.push({ id: i, pts: w * 3 + d, gd: gf - ga, gf });
-  }
-  standings.sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
-  const rank = standings.findIndex(t => t.id === MY_TEAM) + 1;
-  return rank;
-}
-
-function renderStats() {
-  const { w, d, l, pts } = calcStats();
-  const rank = calcRank();
-  const played = w + d + l;
-  if (played === 0) {
-    ['st-w','st-d','st-l','st-pts','st-rank'].forEach(id => {
-      document.getElementById(id).textContent = '-';
-    });
-    return;
-  }
-  document.getElementById('st-w').textContent = w;
-  document.getElementById('st-d').textContent = d;
-  document.getElementById('st-l').textContent = l;
-  document.getElementById('st-pts').textContent = pts;
-  document.getElementById('st-rank').textContent = rank + '位';
-}
-
-function renderSchedule() {
-  const area = document.getElementById('schedule-area');
-  if (!schedules || schedules.length === 0) {
-    area.innerHTML = '<div class="no-schedule">スケジュールは未登録です</div>';
-    return;
-  }
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // 日付でソート
-  const sorted = [...schedules].sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  // 直近の未来試合を探す
-  let nextIdx = -1;
-  for (let i = 0; i < sorted.length; i++) {
-    if (new Date(sorted[i].date) >= today) { nextIdx = i; break; }
-  }
-
-  let html = '';
-  sorted.forEach((sc, i) => {
-    const d = new Date(sc.date);
-    const month = d.getMonth() + 1;
-    const day = d.getDate();
-    const dow = ['日','月','火','水','木','金','土'][d.getDay()];
-    const isNext = (i === nextIdx);
-    html += `
-      <div class="match">
-        <div class="match-date"><strong>${month}/${day}</strong>${dow}</div>
-        <div class="match-div"></div>
-        <div class="match-info">
-          <div class="match-vs">vs ${sc.opponent || '相手未定'}</div>
-          <div class="match-venue">${sc.venue || ''}${sc.time ? ' ' + sc.time : ''}</div>
-        </div>
-        ${isNext ? '<div class="next-badge">NEXT</div>' : ''}
-      </div>
-    `;
-  });
-  area.innerHTML = html;
-}
-
-// 初期化
-loadData();
+// ===== INIT =====
 renderStats();
-renderSchedule();
+loadNotices();renderNotices();
+loadSchedule();renderSchedule();
 </script>
 </body>
 </html>
