@@ -1053,8 +1053,8 @@ async function uploadToGitHub() {
       sha = gd.sha;
       baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
     }
-    // localStorageの全データを収集してHTMLに埋め込む
-    const dataKeys = ['funplace_lineup', 'funplace_history', 'github_token'];
+    // localStorageのデータを収集（Tokenは除外）
+    const dataKeys = ['funplace_lineup', 'funplace_history'];
     let initScript = '<script id="__ls_init__">\n';
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
