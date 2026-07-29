@@ -1031,7 +1031,7 @@ function saveGithubToken() {
 }
 
 async function uploadToGitHub() {
-  const token = getToken();
+  const token = getGithubToken();
   if (!token) {
     document.getElementById('tokenArea').style.display = 'block';
     document.getElementById('githubStatus').style.color = '#ffa726';
@@ -1070,10 +1070,10 @@ async function uploadToGitHub() {
 }
 
 // ========== INIT ==========
-loadState();
 initMatchInputs();
 renderAttendance();
 renderHistory();
+loadFromGitHub();
 // 保存済みTokenを入力欄に表示
 (function() {
   var t = getGithubToken();
