@@ -627,29 +627,9 @@ function key(i, j) { const lo=Math.min(i,j),hi=Math.max(i,j); return lo+'_'+hi; 
 function getResult(i,j) { return results[key(i,j)]||null; }
 function scoreFor(i,j) { const r=getResult(i,j); if(!r) return null; return i<j?r.a:r.b; }
 
-function load() {
-  try {
-    if(window.__serverData && window.__serverData[STORAGE_KEY]) {
-      results = JSON.parse(window.__serverData[STORAGE_KEY]);
-      localStorage.setItem(STORAGE_KEY, window.__serverData[STORAGE_KEY]);
-    } else {
-      const s = localStorage.getItem(STORAGE_KEY);
-      if(s) results = JSON.parse(s);
-    }
-  } catch(e) {}
-}
+function load() { try { const s=localStorage.getItem(STORAGE_KEY); if(s) results=JSON.parse(s); } catch(e){} }
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(results)); }
-function loadSchedules() {
-  try {
-    if(window.__serverData && window.__serverData[STORAGE_SCHED_KEY]) {
-      schedules = JSON.parse(window.__serverData[STORAGE_SCHED_KEY]);
-      localStorage.setItem(STORAGE_SCHED_KEY, window.__serverData[STORAGE_SCHED_KEY]);
-    } else {
-      const s = localStorage.getItem(STORAGE_SCHED_KEY);
-      if(s) schedules = JSON.parse(s);
-    }
-  } catch(e) {}
-}
+function loadSchedules() { try { const s=localStorage.getItem(STORAGE_SCHED_KEY); if(s) schedules=JSON.parse(s); } catch(e){} }
 function saveSchedules() { localStorage.setItem(STORAGE_SCHED_KEY, JSON.stringify(schedules)); }
 
 function manualSave() {
@@ -912,64 +892,31 @@ async function uploadToGitHub() {
   status.style.color = '#81c784';
   status.textContent = '⏳ アップロード中...';
   try {
+    const dataFile = 'data_yokohama.json';
     const getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
     );
     let sha = '';
-    let baseHTML = '';
-    if (getRes.ok) {
-      const gd = await getRes.json();
-      sha = gd.sha;
-      baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
-      // Tokenを除去（セキュリティ対策）
-      const tokenVal = getToken();
-      if (tokenVal) {
-        const escaped = tokenVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        baseHTML = baseHTML.replace(new RegExp(escaped, 'g'), '');
-      }
-      baseHTML = baseHTML.replace(/(<input[^>]+id="tokenInput"[^>]*value=")[^"]*"/g, '$1"');
-      baseHTML = baseHTML.replace(/localStorage\.setItem\(["']github_token["'][^)]+\);\n?/g, '');
-    }
-    // データをwindow.__serverDataとして埋め込む
-    const dataKeys = [STORAGE_KEY, STORAGE_SCHED_KEY];
-    let initScript = '<script id="__ls_init__">window.__serverData={};\n';
+    if (getRes.ok) { const gd = await getRes.json(); sha = gd.sha; }
+    const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
+    const saveData = {};
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
-      if (v) initScript += 'window.__serverData[' + JSON.stringify(k) + ']=' + JSON.stringify(v) + ';\n';
+      if (v) saveData[k] = v;
     });
-    initScript += '<\/script>';
-    let updatedHTML;
-    if (baseHTML.includes('id="__ls_init__"')) {
-      updatedHTML = baseHTML.replace(/<script id="__ls_init__">[\s\S]*?<\/script>/, initScript);
-    } else {
-      updatedHTML = baseHTML.replace('</head>', initScript + '\n</head>');
-    }
-    const content = btoa(unescape(encodeURIComponent(updatedHTML)));
+    const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
     const putRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       {
         method: 'PUT',
         headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: '市リーグ結果を更新', content: content, sha: sha, branch: GITHUB_BRANCH })
+        body: JSON.stringify({ message: '市リーグ結果を更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
       }
     );
-
-    if (putRes.ok) {
-      status.style.color = '#66bb6a';
-      status.textContent = '✅ GitHubに保存しました！';
-      // localStorageにも保存
-      save();
-      saveSchedules();
-    } else {
-      const err = await putRes.json();
-      status.style.color = '#ef5350';
-      status.textContent = '❌ エラー: ' + (err.message || '不明なエラー');
-    }
-  } catch(e) {
-    status.style.color = '#ef5350';
-    status.textContent = '❌ 通信エラーが発生しました';
-  }
+    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
+    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
+  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
 }
 
 
@@ -993,6 +940,25 @@ document.body.classList.add('view-mode');
 document.getElementById('viewModeBanner').style.display='block';
 render();
 renderSchedule();
+async function loadFromGitHub() {
+  try {
+    const res = await fetch(
+      'https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_yokohama.json?t=' + Date.now()
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
+      dataKeys.forEach(function(k) {
+        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
+      });
+    }
+  } catch(e) { console.log('data読み込みスキップ:', e); }
+  load();
+loadSchedules();
+renderMatrix();
+renderStandings();
+renderSchedule();
+}
 </script>
 </body>
 </html>

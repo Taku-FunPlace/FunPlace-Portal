@@ -454,8 +454,8 @@ let state = {
 let selectedPlayerId = null;
 
 function loadState() {
-  const saved = (window.__serverData && window.__serverData['funplace_lineup']) ? window.__serverData['funplace_lineup'] : localStorage.getItem('funplace_lineup');
-  if (saved) { try { state = JSON.parse(saved); if(window.__serverData && window.__serverData['funplace_lineup']) localStorage.setItem('funplace_lineup', saved); } catch(e){} }
+  const saved = localStorage.getItem('funplace_lineup');
+  if (saved) { try { state = JSON.parse(saved); } catch(e){} }
   PLAYERS.forEach(p => { if (state.attendance[p.id] === undefined) state.attendance[p.id] = false; });
 }
 function saveState() { localStorage.setItem('funplace_lineup', JSON.stringify(state)); }
@@ -857,7 +857,7 @@ function saveMatch() {
 
 // ========== HISTORY ==========
 function getHistory() {
-  try { const v = (window.__serverData && window.__serverData['funplace_history']) ? window.__serverData['funplace_history'] : localStorage.getItem('funplace_history'); if(window.__serverData && window.__serverData['funplace_history']) localStorage.setItem('funplace_history', v); return JSON.parse(v) || []; } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem('funplace_history')) || []; } catch(e) { return []; }
 }
 function renderHistory() {
   var list = document.getElementById('history-list');
@@ -1042,49 +1042,26 @@ async function uploadToGitHub() {
   status.style.color = '#81c784';
   status.textContent = '⏳ アップロード中...';
   try {
+    const dataFile = 'data_lineup.json';
     const getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
     );
     let sha = '';
-    let baseHTML = '';
-    if (getRes.ok) {
-      const gd = await getRes.json();
-      sha = gd.sha;
-      baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
-      // Tokenをすべて除去（セキュリティ対策）
-      const tokenVal = getToken();
-      if (tokenVal) {
-        const escaped = tokenVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        baseHTML = baseHTML.replace(new RegExp(escaped, 'g'), '');
-      }
-      // tokenInputの値をクリア
-      baseHTML = baseHTML.replace(/(<input[^>]+id="tokenInput"[^>]*value=")[^"]*"/g, '$1"');
-      // github_tokenのlocalStorage初期化を除去
-      baseHTML = baseHTML.replace(/localStorage\.setItem\(["']github_token["'][^)]+\);\n?/g, '');
-    }
-    // localStorageのデータを収集（Tokenは除外）
+    if (getRes.ok) { const gd = await getRes.json(); sha = gd.sha; }
     const dataKeys = ['funplace_lineup', 'funplace_history'];
-    let initScript = '<script id="__ls_init__">window.__serverData={};\n';
+    const saveData = {};
     dataKeys.forEach(function(k) {
       const v = localStorage.getItem(k);
-      if (v) initScript += 'window.__serverData[' + JSON.stringify(k) + ']=' + JSON.stringify(v) + ';\n';
+      if (v) saveData[k] = v;
     });
-    initScript += '<\/script>';
-    // 既存の初期化スクリプトを置き換えるか、なければ</head>直前に挿入
-    let updatedHTML;
-    if (baseHTML.includes('id="__ls_init__"')) {
-      updatedHTML = baseHTML.replace(/<script id="__ls_init__">[\s\S]*?<\/script>/, initScript);
-    } else {
-      updatedHTML = baseHTML.replace('</head>', initScript + '\n</head>');
-    }
-    const content = btoa(unescape(encodeURIComponent(updatedHTML)));
+    const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
     const putRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       {
         method: 'PUT',
         headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'フォーメーションを更新', content: content, sha: sha, branch: GITHUB_BRANCH })
+        body: JSON.stringify({ message: 'フォーメーションを更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
       }
     );
     if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
@@ -1117,6 +1094,22 @@ document.querySelectorAll('.tab').forEach(function(tab) {
 });
 
 // 履歴ボタンはDOM構築方式のためイベント委譲不要
+async function loadFromGitHub() {
+  try {
+    const res = await fetch(
+      'https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_lineup.json?t=' + Date.now()
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const dataKeys = ['funplace_lineup', 'funplace_history'];
+      dataKeys.forEach(function(k) {
+        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
+      });
+    }
+  } catch(e) { console.log('data読み込みスキップ:', e); }
+  loadState();
+renderAll();
+}
 </script>
 </body>
 </html>

@@ -916,7 +916,8 @@ function getToken() {
 function saveToken() {
   const t = document.getElementById('tokenInput').value.trim();
   if (!t) { alert('Tokenを入力してください'); return; }
-    document.getElementById('tokenArea').style.display = 'none';
+  localStorage.setItem('github_token', t);
+  document.getElementById('tokenArea').style.display = 'none';
   document.getElementById('githubStatus').style.color = '#4caf50';
   document.getElementById('githubStatus').textContent = '✅ Token保存しました';
   setTimeout(() => { document.getElementById('githubStatus').textContent = ''; }, 2000);
@@ -941,31 +942,125 @@ async function uploadToGitHub() {
   status.style.color = '#81c784';
   status.textContent = '⏳ アップロード中...';
   try {
+    const dataFile = 'data_ksl.json';
     const getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE,
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
     );
     let sha = '';
-    let baseHTML = '';
-    if (getRes.ok) {
-      const gd = await getRes.json();
-      sha = gd.sha;
-      baseHTML = decodeURIComponent(escape(atob(gd.content.replace(/\n/g, ''))));
-      // Tokenをすべて除去（セキュリティ対策）
-      const tokenVal = getToken();
-      if (tokenVal) {
-        const escaped = tokenVal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        baseHTML = baseHTML.replace(new RegExp(escaped, 'g'), '');
-      }
-      // tokenInputの値をクリア
-      baseHTML = baseHTML.replace(/(<input[^>]+id="tokenInput"[^>]*value=")[^"]*"/g, '$1"');
-      // github_tokenのlocalStorage初期化を除去
-      baseHTML = baseHTML.replace(/localStorage\.setItem\(["']github_token["'][^)]+\);\n?/g, '');
-    }
-    // localStorageのデータを収集（Tokenは除外）
+    if (getRes.ok) { const gd = await getRes.json(); sha = gd.sha; }
     const dataKeys = ['ksl3l_2026', 'ksl3l_2026_schedule'];
-    let initScript = '<script id="__ls_init__">window.__serverData={};
-window.__serverData["ksl3l_2026"]="{\"0_1\":{\"a\":0,\"b\":2}}";
+    const saveData = {};
+    dataKeys.forEach(function(k) {
+      const v = localStorage.getItem(k);
+      if (v) saveData[k] = v;
+    });
+    const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
+    const putRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
+      {
+        method: 'PUT',
+        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'リーグ結果を更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
+      }
+    );
+    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
+    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
+  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
+}
+
+
+function switchToEditMode() {
+  document.body.classList.remove('view-mode');
+  document.getElementById('viewModeBanner').style.display = 'none';
+  document.getElementById('editModeBanner').style.display = 'block';
+}
+function switchToViewMode() {
+  document.body.classList.add('view-mode');
+  document.getElementById('editModeBanner').style.display = 'none';
+  document.getElementById('viewModeBanner').style.display = 'block';
+}
+
+// ===== SHARE =====
+function generateShareLink() {
+  const data = {
+    r: results,
+    s: schedules
+  };
+  const json = JSON.stringify(data);
+  // compress using base64
+  const encoded = btoa(unescape(encodeURIComponent(json)));
+  const url = location.href.split('?')[0].split('#')[0] + '?d=' + encoded;
+  document.getElementById('shareLinkBox').textContent = url;
+  document.getElementById('shareLinkArea').style.display = 'block';
+  document.getElementById('copyDone').style.display = 'none';
+}
+
+function copyShareLink() {
+  const url = document.getElementById('shareLinkBox').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    document.getElementById('copyDone').style.display = 'block';
+    setTimeout(() => { document.getElementById('copyDone').style.display = 'none'; }, 2000);
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('copyDone').style.display = 'block';
+    setTimeout(() => { document.getElementById('copyDone').style.display = 'none'; }, 2000);
+  });
+}
+
+// URLからデータを読み込む
+function loadFromURL() {
+  const params = new URLSearchParams(location.search);
+  const d = params.get('d');
+  if (!d) return false;
+  try {
+    const json = decodeURIComponent(escape(atob(d)));
+    const data = JSON.parse(json);
+    if (data.r) results = data.r;
+    if (data.s) schedules = data.s;
+    // 閲覧モード
+    document.body.classList.add('view-mode');
+    document.getElementById('viewModeBanner').style.display = 'block';
+    return true;
+  } catch(e) {
+    console.error('URL data parse error:', e);
+    return false;
+  }
+}
+
+const fromURL = loadFromURL();
+if(!fromURL) {
+  load();
+  loadSchedules();
+}
+// デフォルトは閲覧モード
+document.body.classList.add('view-mode');
+document.getElementById('viewModeBanner').style.display = 'block';
+render();
+renderSchedule();
+async function loadFromGitHub() {
+  try {
+    const res = await fetch(
+      'https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_ksl.json?t=' + Date.now()
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const dataKeys = ['ksl3l_2026', 'ksl3l_2026_schedule'];
+      dataKeys.forEach(function(k) {
+        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
+      });
+    }
+  } catch(e) { console.log('data読み込みスキップ:', e); }
+  load();
+loadSchedules();
+renderAll();
+}
 </script>
 </body>
 </html>
