@@ -1053,7 +1053,7 @@ async function uploadToGitHub() {
     var sha = '';
     var getRes = await fetch(
       'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile + '?t=' + Date.now(),
-      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Cache-Control': 'no-cache' } }
+      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
     );
     if (getRes.ok) {
       var gd = await getRes.json();
