@@ -899,12 +899,11 @@ async function uploadToGitHub() {
     );
     let sha = '';
     if (getRes.ok) { const gd = await getRes.json(); sha = gd.sha; }
-    const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
     const saveData = {};
-    dataKeys.forEach(function(k) {
-      const v = localStorage.getItem(k);
-      if (v) saveData[k] = v;
-    });
+    const v1 = localStorage.getItem('yokohama_league_2026');
+    const v2 = localStorage.getItem('yokohama_league_2026_schedule');
+    if (v1) saveData['yokohama_league_2026'] = v1;
+    if (v2) saveData['yokohama_league_2026_schedule'] = v2;
     const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
     const putRes = await fetch(
       'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
@@ -914,9 +913,22 @@ async function uploadToGitHub() {
         body: JSON.stringify({ message: '市リーグ結果を更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
       }
     );
-    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
-    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
-  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
+
+    if (putRes.ok) {
+      status.style.color = '#66bb6a';
+      status.textContent = '✅ GitHubに保存しました！';
+      // localStorageにも保存
+      save();
+      saveSchedules();
+    } else {
+      const err = await putRes.json();
+      status.style.color = '#ef5350';
+      status.textContent = '❌ エラー: ' + (err.message || '不明なエラー');
+    }
+  } catch(e) {
+    status.style.color = '#ef5350';
+    status.textContent = '❌ 通信エラーが発生しました';
+  }
 }
 
 
@@ -942,6 +954,7 @@ if(fromURL) {
 } else {
   loadFromGitHub();
 }
+
 async function loadFromGitHub() {
   try {
     const res = await fetch(
@@ -949,17 +962,11 @@ async function loadFromGitHub() {
     );
     if (res.ok) {
       const data = await res.json();
-      const dataKeys = [STORAGE_KEY, STORAGE_SCHED_KEY];
-      dataKeys.forEach(function(k) {
-        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
-      });
+      if (data['yokohama_league_2026']) localStorage.setItem('yokohama_league_2026', data['yokohama_league_2026']);
+      if (data['yokohama_league_2026_schedule']) localStorage.setItem('yokohama_league_2026_schedule', data['yokohama_league_2026_schedule']);
     }
   } catch(e) { console.log('data読み込みスキップ:', e); }
-  load();
-  loadSchedules();
-  renderMatrix();
-  renderStandings();
-  renderSchedule();
+  load(); loadSchedules(); render(); renderSchedule();
 }
 </script>
 </body>
