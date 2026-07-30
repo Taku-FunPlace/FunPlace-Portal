@@ -1043,24 +1043,27 @@ async function uploadToGitHub() {
   status.textContent = '⏳ アップロード中...';
   try {
     var dataFile = 'data_lineup.json';
-    var getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
-      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
-    );
-    var sha = '';
-    if (getRes.ok) { var gd = await getRes.json(); sha = gd.sha; }
     var saveData = {};
     var v1 = localStorage.getItem('funplace_lineup');
     var v2 = localStorage.getItem('funplace_history');
     if (v1) saveData['funplace_lineup'] = v1;
     if (v2) saveData['funplace_history'] = v2;
     var jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
+    // まず現在のSHAを取得（ファイルが存在しない場合はSHAなし）
+    var sha = '';
+    var getRes = await fetch(
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
+      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (getRes.ok) { var gd = await getRes.json(); sha = gd.sha; }
+    var body = { message: 'フォーメーションを更新', content: jsonContent, branch: GITHUB_BRANCH };
+    if (sha) { body.sha = sha; }
     var putRes = await fetch(
       'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       {
         method: 'PUT',
         headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'フォーメーションを更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
+        body: JSON.stringify(body)
       }
     );
     if (putRes.ok) {
