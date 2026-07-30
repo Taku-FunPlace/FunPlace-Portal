@@ -377,16 +377,16 @@
   <div style="padding:8px 16px 0;">
     <button id="btn-github" onclick="uploadToGitHub()" style="width:100%;padding:10px;border-radius:10px;background:#1a2535;color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;">⬆️ GitHubに保存・公開</button>
     <div id="githubStatus" style="font-size:11px;text-align:center;margin-top:4px;min-height:14px;color:var(--accent);"></div>
-    <div id="tokenArea" style="margin-top:6px;">
+    <div id="tokenArea" style="margin-top:6px;display:none;">
       <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">GitHub Personal Access Token</div>
       <input id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:12px;box-sizing:border-box;margin-bottom:5px;">
-      <button id="btn-token-save" onclick="saveGithubToken()" style="width:100%;padding:7px;border-radius:8px;background:var(--green-light);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;">Tokenを保存</button>
+      <button id="btn-token-save" style="width:100%;padding:7px;border-radius:8px;background:var(--green-light);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;">Tokenを保存</button>
     </div>
   </div>
   <!-- リセット・保存行 -->
   <div style="padding:8px 16px 10px;display:flex;gap:8px;">
-    <button id="btn-reset" onclick="resetLineup()" style="flex:1;padding:12px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;">🔄 リセット</button>
-    <button id="btn-save" onclick="saveMatch()" style="flex:1;padding:12px;border-radius:10px;font-size:13px;font-weight:700;border:none;background:var(--accent);color:#000;cursor:pointer;">💾 試合を保存</button>
+    <button id="btn-reset" style="flex:1;padding:12px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;">🔄 リセット</button>
+    <button id="btn-save" style="flex:1;padding:12px;border-radius:10px;font-size:13px;font-weight:700;border:none;background:var(--accent);color:#000;cursor:pointer;">💾 試合を保存</button>
   </div>
 </div>
 
@@ -1031,32 +1031,31 @@ function saveGithubToken() {
 }
 
 async function uploadToGitHub() {
-  const token = getGithubToken();
+  var token = getGithubToken();
   if (!token) {
     document.getElementById('tokenArea').style.display = 'block';
     document.getElementById('githubStatus').style.color = '#ffa726';
     document.getElementById('githubStatus').textContent = '⚠️ まずTokenを設定してください';
     return;
   }
-  const status = document.getElementById('githubStatus');
+  var status = document.getElementById('githubStatus');
   status.style.color = '#81c784';
   status.textContent = '⏳ アップロード中...';
   try {
-    const dataFile = 'data_lineup.json';
-    const getRes = await fetch(
+    var dataFile = 'data_lineup.json';
+    var getRes = await fetch(
       'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
     );
-    let sha = '';
-    if (getRes.ok) { const gd = await getRes.json(); sha = gd.sha; }
-    const dataKeys = ['funplace_lineup', 'funplace_history'];
-    const saveData = {};
-    dataKeys.forEach(function(k) {
-      const v = localStorage.getItem(k);
-      if (v) saveData[k] = v;
-    });
-    const jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
-    const putRes = await fetch(
+    var sha = '';
+    if (getRes.ok) { var gd = await getRes.json(); sha = gd.sha; }
+    var saveData = {};
+    var v1 = localStorage.getItem('funplace_lineup');
+    var v2 = localStorage.getItem('funplace_history');
+    if (v1) saveData['funplace_lineup'] = v1;
+    if (v2) saveData['funplace_history'] = v2;
+    var jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
+    var putRes = await fetch(
       'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
       {
         method: 'PUT',
@@ -1064,23 +1063,55 @@ async function uploadToGitHub() {
         body: JSON.stringify({ message: 'フォーメーションを更新', content: jsonContent, sha: sha, branch: GITHUB_BRANCH })
       }
     );
-    if (putRes.ok) { status.style.color = '#66bb6a'; status.textContent = '✅ GitHubに保存しました！'; }
-    else { const err = await putRes.json(); status.style.color = '#ef5350'; status.textContent = '❌ エラー: ' + (err.message || '不明なエラー'); }
-  } catch(e) { console.error(e); status.style.color = '#ef5350'; status.textContent = '❌ 通信エラー'; }
+    if (putRes.ok) {
+      status.style.color = '#66bb6a';
+      status.textContent = '✅ GitHubに保存しました！';
+      saveState();
+    } else {
+      var err = await putRes.json();
+      status.style.color = '#ef5350';
+      status.textContent = '❌ エラー: ' + (err.message || '不明なエラー');
+    }
+  } catch(e) {
+    status.style.color = '#ef5350';
+    status.textContent = '❌ 通信エラー';
+  }
 }
 
 // ========== INIT ==========
+// Token未設定のときだけtokenAreaを表示
+if (!getGithubToken()) {
+  document.getElementById('tokenArea').style.display = 'block';
+}
+loadFromGitHub();
+
+async function loadFromGitHub() {
+  try {
+    var res = await fetch(
+      'https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_lineup.json?t=' + Date.now()
+    );
+    if (res.ok) {
+      var data = await res.json();
+      if (data['funplace_lineup']) localStorage.setItem('funplace_lineup', data['funplace_lineup']);
+      if (data['funplace_history']) localStorage.setItem('funplace_history', data['funplace_history']);
+    }
+  } catch(e) { console.log('data読み込みスキップ:', e); }
+  loadState();
+}
 initMatchInputs();
 renderAttendance();
 renderHistory();
-loadFromGitHub();
 // 保存済みTokenを入力欄に表示
 (function() {
   var t = getGithubToken();
   if (t) document.getElementById('tokenInput').value = t;
 })();
 
-// ボタンはonclick属性で設定済み
+// ボタンに直接イベントを設定（onclick属性はSafariで不安定なため）
+document.getElementById('btn-reset').addEventListener('click', resetLineup);
+document.getElementById('btn-save').addEventListener('click', saveMatch);
+document.getElementById('btn-github').addEventListener('click', uploadToGitHub);
+document.getElementById('btn-token-save').addEventListener('click', saveGithubToken);
 
 // タブ切り替え
 document.querySelectorAll('.tab').forEach(function(tab) {
@@ -1090,22 +1121,6 @@ document.querySelectorAll('.tab').forEach(function(tab) {
 });
 
 // 履歴ボタンはDOM構築方式のためイベント委譲不要
-async function loadFromGitHub() {
-  try {
-    const res = await fetch(
-      'https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_lineup.json?t=' + Date.now()
-    );
-    if (res.ok) {
-      const data = await res.json();
-      const dataKeys = ['funplace_lineup', 'funplace_history'];
-      dataKeys.forEach(function(k) {
-        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
-      });
-    }
-  } catch(e) { console.log('data読み込みスキップ:', e); }
-  loadState();
-  renderAll();
-}
 </script>
 </body>
 </html>
