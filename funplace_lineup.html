@@ -1067,6 +1067,7 @@ async function uploadToGitHub() {
       status.style.color = '#66bb6a';
       status.textContent = '✅ GitHubに保存しました！';
       saveState();
+      setTimeout(function() { status.textContent = ''; }, 3000);
     } else {
       var err = await putRes.json();
       status.style.color = '#ef5350';
