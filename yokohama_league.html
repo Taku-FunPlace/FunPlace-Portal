@@ -934,11 +934,14 @@ function switchToViewMode() {
 
 function render() { renderCross(); renderStandings(); renderStats(); }
 
-const fromURL=loadFromURL();
-if(!fromURL) { load(); loadSchedules(); }
 document.body.classList.add('view-mode');
 document.getElementById('viewModeBanner').style.display='block';
-loadFromGitHub();
+const fromURL=loadFromURL();
+if(fromURL) {
+  load(); loadSchedules(); render(); renderSchedule();
+} else {
+  loadFromGitHub();
+}
 async function loadFromGitHub() {
   try {
     const res = await fetch(
