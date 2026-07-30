@@ -1101,7 +1101,8 @@ async function loadFromGitHub() {
     }
   } catch(e) { console.log('data読み込みスキップ:', e); }
   loadState();
-  renderAll();
+  renderAttendance();
+  renderHistory();
 }
 initMatchInputs();
 renderAttendance();
