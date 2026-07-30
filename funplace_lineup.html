@@ -1049,13 +1049,21 @@ async function uploadToGitHub() {
     if (v1) saveData['funplace_lineup'] = v1;
     if (v2) saveData['funplace_history'] = v2;
     var jsonContent = btoa(unescape(encodeURIComponent(JSON.stringify(saveData))));
-    // まず現在のSHAを取得（ファイルが存在しない場合はSHAなし）
+    // 常にGitHubから最新SHAを取得
     var sha = '';
     var getRes = await fetch(
-      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile,
-      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } }
+      'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + dataFile + '?t=' + Date.now(),
+      { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Cache-Control': 'no-cache' } }
     );
-    if (getRes.ok) { var gd = await getRes.json(); sha = gd.sha; }
+    if (getRes.ok) {
+      var gd = await getRes.json();
+      sha = gd.sha;
+    } else if (getRes.status !== 404) {
+      var errData = await getRes.json();
+      status.style.color = '#ef5350';
+      status.textContent = '❌ SHA取得エラー: ' + (errData.message || '不明なエラー');
+      return;
+    }
     var body = { message: 'フォーメーションを更新', content: jsonContent, branch: GITHUB_BRANCH };
     if (sha) { body.sha = sha; }
     var putRes = await fetch(
