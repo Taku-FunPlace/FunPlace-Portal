@@ -938,8 +938,7 @@ const fromURL=loadFromURL();
 if(!fromURL) { load(); loadSchedules(); }
 document.body.classList.add('view-mode');
 document.getElementById('viewModeBanner').style.display='block';
-render();
-renderSchedule();
+loadFromGitHub();
 async function loadFromGitHub() {
   try {
     const res = await fetch(
@@ -947,7 +946,7 @@ async function loadFromGitHub() {
     );
     if (res.ok) {
       const data = await res.json();
-      const dataKeys = ['yokohama_league_2026', 'yokohama_league_2026_schedule'];
+      const dataKeys = [STORAGE_KEY, STORAGE_SCHED_KEY];
       dataKeys.forEach(function(k) {
         if (data[k] !== undefined) localStorage.setItem(k, data[k]);
       });

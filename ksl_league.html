@@ -626,15 +626,7 @@ function scoreAgainst(i, j) {
 }
 
 function load() {
-  try {
-    if(window.__serverData && window.__serverData['ksl3l_2026']) {
-      results = JSON.parse(window.__serverData['ksl3l_2026']);
-      localStorage.setItem('ksl3l_2026', window.__serverData['ksl3l_2026']);
-    } else {
-      const s = localStorage.getItem('ksl3l_2026');
-      if(s) results = JSON.parse(s);
-    }
-  } catch(e) {}
+  try { const s = localStorage.getItem('ksl3l_2026'); if(s) results = JSON.parse(s); } catch(e) {}
 }
 function save() {
   localStorage.setItem('ksl3l_2026', JSON.stringify(results));;
@@ -646,15 +638,7 @@ let schedules = [];
 let editingScheduleIdx = -1;
 
 function loadSchedules() {
-  try {
-    if(window.__serverData && window.__serverData['ksl3l_2026_schedule']) {
-      schedules = JSON.parse(window.__serverData['ksl3l_2026_schedule']);
-      localStorage.setItem('ksl3l_2026_schedule', window.__serverData['ksl3l_2026_schedule']);
-    } else {
-      const s = localStorage.getItem('ksl3l_2026_schedule');
-      if(s) schedules = JSON.parse(s);
-    }
-  } catch(e) {}
+  try { const s = localStorage.getItem('ksl3l_2026_schedule'); if(s) schedules = JSON.parse(s); } catch(e) {}
 }
 function saveSchedules() {
   localStorage.setItem('ksl3l_2026_schedule', JSON.stringify(schedules));;
@@ -1035,15 +1019,15 @@ function loadFromURL() {
 }
 
 const fromURL = loadFromURL();
-if(!fromURL) {
-  load();
-  loadSchedules();
-}
 // デフォルトは閲覧モード
 document.body.classList.add('view-mode');
 document.getElementById('viewModeBanner').style.display = 'block';
-render();
-renderSchedule();
+if(!fromURL) {
+  loadFromGitHub();
+} else {
+  render();
+  renderSchedule();
+}
 async function loadFromGitHub() {
   try {
     const res = await fetch(
@@ -1059,7 +1043,8 @@ async function loadFromGitHub() {
   } catch(e) { console.log('data読み込みスキップ:', e); }
   load();
   loadSchedules();
-  renderAll();
+  render();
+  renderSchedule();
 }
 </script>
 </body>
