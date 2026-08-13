@@ -131,7 +131,9 @@ footer span { font-size: 10px; color: #444; letter-spacing: 1px; text-transform:
 <button class="btn-add edit-only" onclick="openScheduleModal()">＋ 試合予定を追加</button>
 
 <div class="section" id="videos"><div class="section-title">試合動画</div></div>
-<div class="videos-placeholder">動画は順次追加予定です</div>
+<div id="latestVideoArea" style="padding: 0 16px 16px;">
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:14px;color:#888;font-size:12px;text-align:center;">読み込み中...</div>
+</div>
 
 <div class="github-section edit-only">
   <button class="btn-github" onclick="uploadToGitHub()">⬆️ GitHubに保存・公開</button>
@@ -343,6 +345,35 @@ async function loadFromGitHub(){
   }catch(e){console.log('data読み込みスキップ:',e);}
   loadNotices();renderNotices();
   loadSchedule();renderSchedule();
+  loadLatestVideo();
+}
+
+async function loadLatestVideo(){
+  var area=document.getElementById('latestVideoArea');
+  try{
+    var res=await fetch('https://raw.githubusercontent.com/Taku-FunPlace/funplace-portal/main/data_videos.json?t='+Date.now());
+    if(res.ok){
+      var data=await res.json();
+      var videos=JSON.parse(data['fp_videos']||'[]');
+      if(videos.length>0){
+        var v=videos[0];
+        area.innerHTML='<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;">'
+          +'<span style="font-size:20px;">📹</span>'
+          +'<div style="flex:1;">'
+          +'<div style="font-size:10px;color:#888;margin-bottom:2px;">'+esc(v.date||'')+'</div>'
+          +'<div style="font-size:13px;font-weight:700;color:#e8e8e8;">'+esc(v.comment||'')+(v.result?' <span style="color:#4ecb71;">'+esc(v.result)+'</span>':'')+'</div>'
+          +'</div>'
+          +'<a href="videos.html" style="font-size:11px;color:#4ecb71;text-decoration:none;white-space:nowrap;">動画を見る →</a>'
+          +'</div>';
+      }else{
+        area.innerHTML='<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;color:#888;font-size:12px;">動画は順次追加予定です</div>';
+      }
+    }else{
+      area.innerHTML='<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;color:#888;font-size:12px;">動画は順次追加予定です</div>';
+    }
+  }catch(e){
+    area.innerHTML='<div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:14px;text-align:center;color:#888;font-size:12px;">動画は順次追加予定です</div>';
+  }
 }
 
 // ===== 初期化 =====
