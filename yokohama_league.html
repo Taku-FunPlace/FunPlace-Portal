@@ -415,6 +415,8 @@ td.pts { font-weight: 900; font-size: 15px; color: #1a6bb5; }
   justify-content: center;
 }
 .modal-overlay.open { display: flex !important; }
+#scheduleModalOverlay { display: none; }
+#scheduleModalOverlay.open { display: flex !important; }
 .modal {
   background: #fff;
   border: 1px solid #d0e4f7;
@@ -560,7 +562,7 @@ table.cross tbody {
 <button class="btn-add-schedule edit-only" onclick="openScheduleModal(-1)">＋ 試合予定を追加</button>
 
 <!-- Schedule Modal -->
-<div class="modal-overlay edit-only" id="scheduleModalOverlay">
+<div class="modal-overlay" id="scheduleModalOverlay">
   <div class="modal">
     <h2 id="schedModalTitle">試合予定を追加</h2>
     <div style="margin-bottom:14px;">
