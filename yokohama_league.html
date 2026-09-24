@@ -680,6 +680,12 @@ function clearResult() { delete results[key(modalI,modalJ)]; save(); render(); c
 document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('modalOverlay').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
   document.getElementById('scheduleModalOverlay').addEventListener('click',function(e){ if(e.target===this) closeScheduleModal(); });
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('sched-edit-btn')) {
+      var idx = parseInt(e.target.getAttribute('data-sched-idx'));
+      openScheduleModal(idx);
+    }
+  });
 });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeScheduleModal(); } });
 
@@ -782,7 +788,7 @@ function renderSchedule() {
     const hlA=s.teamA===MY_TEAM?' style="color:#1a6bb5"':'';
     const hlB=s.teamB===MY_TEAM?' style="color:#1a6bb5"':'';
     const isEditMode=!document.body.classList.contains('view-mode');
-    const editBtn=isEditMode?'<button onclick="openScheduleModal('+s.idx+')" style="background:none;border:1px solid #1a6bb5;color:#1a6bb5;font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;white-space:nowrap;">✏️ 編集</button>':'';
+    const editBtn=isEditMode?'<button data-sched-idx="'+s.idx+'" class="sched-edit-btn" style="background:none;border:1px solid #1a6bb5;color:#1a6bb5;font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;white-space:nowrap;">✏️ 編集</button>':'';
     html+='<div class="schedule-item'+(isMyNext?' next':'')+'" style="display:flex;align-items:center;gap:8px;"><div class="schedule-date">'+main+'<span class="day-label">'+sub+'</span></div><div class="schedule-opponent" style="flex:1;"><span'+hlA+'>'+nameA+'</span> <span style="color:#1a6bb5;font-size:11px">vs</span> <span'+hlB+'>'+nameB+'</span></div>'+(isMyNext?'<span class="schedule-next-badge">NEXT</span>':'')+editBtn+'</div>';
   });
   container.innerHTML=html;
