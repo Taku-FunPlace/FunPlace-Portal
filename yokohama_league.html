@@ -781,8 +781,9 @@ function renderSchedule() {
     const nameB=TEAMS[s.teamB]?.name||'';
     const hlA=s.teamA===MY_TEAM?' style="color:#1a6bb5"':'';
     const hlB=s.teamB===MY_TEAM?' style="color:#1a6bb5"':'';
-    const clickable=!document.body.classList.contains('view-mode')?' onclick="openScheduleModal('+s.idx+')"':'';
-    html+='<div class="schedule-item'+(isMyNext?' next':'')+'"'+clickable+'><div class="schedule-date">'+main+'<span class="day-label">'+sub+'</span></div><div class="schedule-opponent"><span'+hlA+'>'+nameA+'</span> <span style="color:#1a6bb5;font-size:11px">vs</span> <span'+hlB+'>'+nameB+'</span></div>'+(isMyNext?'<span class="schedule-next-badge">NEXT</span>':'<span style="width:36px"></span>')+'</div>';
+    const isEditMode=!document.body.classList.contains('view-mode');
+    const editBtn=isEditMode?'<button onclick="openScheduleModal('+s.idx+')" style="background:none;border:1px solid #1a6bb5;color:#1a6bb5;font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer;white-space:nowrap;">✏️ 編集</button>':'';
+    html+='<div class="schedule-item'+(isMyNext?' next':'')+'" style="display:flex;align-items:center;gap:8px;"><div class="schedule-date">'+main+'<span class="day-label">'+sub+'</span></div><div class="schedule-opponent" style="flex:1;"><span'+hlA+'>'+nameA+'</span> <span style="color:#1a6bb5;font-size:11px">vs</span> <span'+hlB+'>'+nameB+'</span></div>'+(isMyNext?'<span class="schedule-next-badge">NEXT</span>':'')+editBtn+'</div>';
   });
   container.innerHTML=html;
 }
